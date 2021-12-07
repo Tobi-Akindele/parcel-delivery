@@ -31,3 +31,7 @@
     text-align: center;
     padding: 10px;
 }
+
+.compulsory-fields{
+    color: red;
+}

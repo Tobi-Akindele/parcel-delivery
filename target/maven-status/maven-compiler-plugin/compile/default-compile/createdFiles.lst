@@ -1,2 +1,7 @@
-com/tobiakindele/assessmentdemo/resources/JavaEE8Resource.class
-com/tobiakindele/assessmentdemo/JAXRSConfiguration.class
+com/tobiakindele/parceldelivery/utils/Utils.class
+com/tobiakindele/parceldelivery/validators/EmailValidator.class
+com/tobiakindele/parceldelivery/managedbean/SignUpRequest.class
+com/tobiakindele/parceldelivery/utils/ConstantUtils.class
+com/tobiakindele/parceldelivery/JAXRSConfiguration.class
+com/tobiakindele/parceldelivery/resources/JavaEE8Resource.class
+com/tobiakindele/parceldelivery/validators/NameValidator.class
