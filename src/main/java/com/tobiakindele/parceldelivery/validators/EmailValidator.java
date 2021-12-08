@@ -14,6 +14,7 @@ import javax.faces.validator.ValidatorException;
  *
  * @author oyindamolaakindele
  */
+
 @FacesValidator("com.tobiakindele.parceldelivery.validators.EmailValidator")
 public class EmailValidator implements Validator{
 

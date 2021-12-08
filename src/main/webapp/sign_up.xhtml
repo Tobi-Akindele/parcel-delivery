@@ -13,12 +13,12 @@
     <ui:define name="content">
 
         <div class="container w-75">
-            <h:form>
+            <h:form id="userSignUpForm">
                 <!--Email--> 
                 <div class="mb-3 row">
                     <label for="email" class="col-sm-2 col-form-label">Email <span class="compulsory-fields">*</span>:</label>
-                    <div class="col-sm-9">
-                        <h:inputText id="email" class="form-control" label="Email Address" value="#{signUpRequest.email}">
+                    <div class="col-sm-10">
+                        <h:inputText id="email" class="form-control" label="Email Address" value="#{signUpRequest.user.email}">
                             <f:validator validatorId="com.tobiakindele.parceldelivery.validators.EmailValidator" />
                         </h:inputText>
                         <h:message for="email" style="color:red" />
@@ -28,8 +28,8 @@
                 <!-- First name -->
                 <div class="mb-3 row">
                     <label for="firstName" class="col-sm-2 col-form-label">First Name <span class="compulsory-fields">*</span>:</label>
-                    <div class="col-sm-9">
-                        <h:inputText id="firstName" class="form-control" label="First Name" value="#{signUpRequest.firstName}">
+                    <div class="col-sm-10">
+                        <h:inputText id="firstName" class="form-control" label="First Name" value="#{signUpRequest.user.firstName}">
                             <f:validator validatorId="com.tobiakindele.parceldelivery.validators.NameValidator" />
                         </h:inputText> 
                         <h:message for="firstName" style="color:red" />
@@ -39,8 +39,8 @@
                 <!-- Last name -->
                 <div class="mb-3 row">
                     <label for="lastName" class="col-sm-2 col-form-label">Last Name <span class="compulsory-fields">*</span>:</label>
-                    <div class="col-sm-9">
-                        <h:inputText id="lastName" class="form-control" label="Last Name" value="#{signUpRequest.lastName}">
+                    <div class="col-sm-10">
+                        <h:inputText id="lastName" class="form-control" label="Last Name" value="#{signUpRequest.user.lastName}">
                             <f:validator validatorId="com.tobiakindele.parceldelivery.validators.NameValidator" />
                         </h:inputText>
                         <h:message for="lastName" style="color:red" />
@@ -50,20 +50,85 @@
                 <!-- Date of Birth -->
                 <div class="row mb-3 dob">
                     <label for="dateOfBirth" class="col-sm-2 col-form-label">Date of Birth :</label>
-                    <div class="input-group date w-75" id="datepicker">
+                    <div class="input-group date w-auto" id="datepicker">
                         <h:inputText id="dateOfBirth" styleClass="form-control datepicker" label="Date of Birth" 
-                                     value="#{signUpRequest.dateOfBirth}" 
+                                     value="#{signUpRequest.user.dateOfBirth}" 
                                      converter="dateConverter"
                                      converterMessage="Date failed to convert"/>
                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                     </div>
                 </div>
 
+                <!-- Address -->
+                <div class="row mb-3">
+                    <label for="street" class="col-sm-2">Street <span class="compulsory-fields">*</span>:</label>
+                    <div class="col-sm-2">
+                        <h:inputText id="street" class="form-control" label="Street" value="#{signUpRequest.user.address.street}">
+                            <f:validator validatorId="com.tobiakindele.parceldelivery.validators.NameValidator" />
+                        </h:inputText>
+                        <h:message for="street" style="color:red" />
+                    </div>
+                    <label for="city" class="col-sm-2">City <span class="compulsory-fields">*</span>:</label>
+                    <div class="col-sm-2">
+                        <h:inputText id="city" class="form-control" label="City" value="#{signUpRequest.user.address.city}">
+                            <f:validator validatorId="com.tobiakindele.parceldelivery.validators.NameValidator" />
+                        </h:inputText>
+                        <h:message for="city" style="color:red" />
+                    </div>
+                    <label for="postCode" class="col-sm-2">Post Code <span class="compulsory-fields">*</span>:</label>
+                    <div class="col-sm-2">
+                        <h:inputText id="postCode" class="form-control" label="Post Code" value="#{signUpRequest.user.address.postCode}">
+                            <f:validator validatorId="com.tobiakindele.parceldelivery.validators.NameValidator" />
+                        </h:inputText>
+                        <h:message for="postCode" style="color:red" />
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="row mb-3">
+                    <!--Password-->
+                    <label for="password" class="col-sm-2">Password <span class="compulsory-fields">*</span>:</label>
+                    <div class="col-sm-4">
+                        <h:inputSecret id="password" class="form-control" label="Password" value="#{signUpRequest.user.password}" required="true">
+                            <f:validator validatorId="com.tobiakindele.parceldelivery.validators.PasswordValidator" />
+                        </h:inputSecret>
+                        <h:message for="password" style="color:red" />
+                    </div>
+
+                    <!--Confirm Password-->
+                    <label for="confirmPassword" class="col-sm-2">Confirm Password <span class="compulsory-fields">*</span>:</label>
+                    <div class="col-sm-4">
+                        <h:inputSecret id="confirmPassword" class="form-control" label="Confirm Password" value="#{signUpRequest.user.confirmPassword}" required="true">
+                            <f:validator validatorId="com.tobiakindele.parceldelivery.validators.PasswordValidator" />
+                        </h:inputSecret>
+                        <h:message for="confirmPassword" style="color:red" />
+                    </div>
+                </div>
 
 
-                <h:commandButton value="Submit" action="login" />
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <h:commandButton value="Submit" styleClass="btn btn-secondary" action="login" />
+                </div>
+
             </h:form>
-            
+
+            <div id="message">
+                <div class="container">
+                    <div class="row left">
+                        <p>Password should contain the following:</p>
+                        <p id="letter" class="invalid">At least <b>lowercase</b> letter</p>
+                        <p id="capital" class="invalid">At least <b>capital (uppercase)</b> letter</p>
+                        <p id="number" class="invalid">At least <b>number</b></p>
+                        <p id="length" class="invalid">Minimum <b>8 characters</b></p>
+                    </div>
+                    
+                    <div class="row right">
+                        <p id="passwordMatch" class="invalid"><b>Confirm password</b> match</p>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
 
     </ui:define>
