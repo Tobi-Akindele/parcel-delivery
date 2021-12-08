@@ -13,20 +13,21 @@
         <!-- Bootstrap core CSS -->
         <h:outputStylesheet name="bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
         <h:outputStylesheet name="css/main_template.css" />
+        <h:outputStylesheet name="css/styles.css" />
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />   
         
         <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js" />
 	<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" />
-        <h:outputScript library="js" name="formatDatePicker.js" />
+        <h:outputScript library="js" name="script.js" />
 
         <title><ui:insert name="title">Delis: Home</ui:insert></title>
     </h:head>
 
     <h:body>
 
-        <div class="container-fluid fixed-top">
-            <div class="row">
+        <div class="container-fluid">
+            <div class="row fixed-top">
                 <div class="col-md-12 menu">
                     <ui:insert name="menu">
                         <div class="row w-auto">
@@ -73,7 +74,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row main-content">
                 <div class="col-md-12 content-area">
                     <div class="content">
                         <ui:insert name="content"> Content </ui:insert>

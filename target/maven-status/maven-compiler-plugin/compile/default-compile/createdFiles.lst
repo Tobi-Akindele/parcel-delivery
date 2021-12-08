@@ -1,5 +1,8 @@
-com/tobiakindele/parceldelivery/utils/Utils.class
 com/tobiakindele/parceldelivery/validators/EmailValidator.class
+com/tobiakindele/parceldelivery/validators/PasswordValidator.class
+com/tobiakindele/parceldelivery/models/User.class
+com/tobiakindele/parceldelivery/utils/Utils.class
+com/tobiakindele/parceldelivery/models/Address.class
 com/tobiakindele/parceldelivery/converters/DateConverter.class
 com/tobiakindele/parceldelivery/utils/LoggerUtil.class
 com/tobiakindele/parceldelivery/managedbean/SignUpRequest.class
