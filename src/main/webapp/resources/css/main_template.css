@@ -35,3 +35,8 @@
 .compulsory-fields{
     color: red;
 }
+
+#dateOfBirth{
+    position: relative;
+    z-index: 9999 !important;
+}

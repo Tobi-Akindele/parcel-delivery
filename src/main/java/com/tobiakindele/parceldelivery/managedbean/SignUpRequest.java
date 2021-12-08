@@ -2,6 +2,7 @@ package com.tobiakindele.parceldelivery.managedbean;
 
 import javax.inject.Named;
 import java.io.Serializable;
+import java.util.Date;
 import javax.enterprise.context.RequestScoped;
 
 /**
@@ -15,6 +16,7 @@ public class SignUpRequest implements Serializable {
     private String email;
     private String firstName;
     private String lastName;
+    private Date dateOfBirth;
 
     /**
      * Creates a new instance of SignUpRequest
@@ -44,5 +46,13 @@ public class SignUpRequest implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 }
