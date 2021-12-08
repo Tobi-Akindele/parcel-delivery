@@ -14,18 +14,22 @@
         <h:outputStylesheet name="bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
         <h:outputStylesheet name="css/main_template.css" />
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" />
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />   
+        
+        <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js" />
+	<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" />
+        <h:outputScript library="js" name="formatDatePicker.js" />
 
         <title><ui:insert name="title">Delis: Home</ui:insert></title>
     </h:head>
 
     <h:body>
 
-        <div class="container">
+        <div class="container-fluid fixed-top">
             <div class="row">
                 <div class="col-md-12 menu">
                     <ui:insert name="menu">
-                        <div class="row">
+                        <div class="row w-auto">
                             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                                 <div class="container-fluid">
                                     <h:link class="navbar-brand fw-bold fs-3" outcome="home">Delis</h:link>
@@ -87,7 +91,7 @@
             </div>
         </div>
         
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>	
     </h:body>
 
 </html>

@@ -2,6 +2,8 @@
 /Users/oyindamolaakindele/Documents/ESE Assessment/parcel-delivery/src/main/java/com/tobiakindele/parceldelivery/validators/NameValidator.java
 /Users/oyindamolaakindele/Documents/ESE Assessment/parcel-delivery/src/main/java/com/tobiakindele/parceldelivery/utils/Utils.java
 /Users/oyindamolaakindele/Documents/ESE Assessment/parcel-delivery/src/main/java/com/tobiakindele/parceldelivery/utils/ConstantUtils.java
+/Users/oyindamolaakindele/Documents/ESE Assessment/parcel-delivery/src/main/java/com/tobiakindele/parceldelivery/utils/LoggerUtil.java
 /Users/oyindamolaakindele/Documents/ESE Assessment/parcel-delivery/src/main/java/com/tobiakindele/parceldelivery/JAXRSConfiguration.java
 /Users/oyindamolaakindele/Documents/ESE Assessment/parcel-delivery/src/main/java/com/tobiakindele/parceldelivery/resources/JavaEE8Resource.java
+/Users/oyindamolaakindele/Documents/ESE Assessment/parcel-delivery/src/main/java/com/tobiakindele/parceldelivery/converters/DateConverter.java
 /Users/oyindamolaakindele/Documents/ESE Assessment/parcel-delivery/src/main/java/com/tobiakindele/parceldelivery/validators/EmailValidator.java
