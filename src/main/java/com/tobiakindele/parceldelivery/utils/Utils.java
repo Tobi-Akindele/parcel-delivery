@@ -6,11 +6,14 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  *
  * @author oyindamolaakindele
  */
+
 public class Utils {
 
     private static final Logger logger = Logger.getLogger(Utils.class.getName());
@@ -35,5 +38,17 @@ public class Utils {
         String date = dateFormat.format(value);
 
         return date;
+    }
+    
+    public static Pattern compilePattern(String regex, int option){
+        return Pattern.compile(regex, option);
+    }
+    
+    public static Pattern compilePattern(String regex){
+        return Pattern.compile(regex);
+    }
+    
+    public static String encryptPassword(String src){
+        return new BCryptPasswordEncoder().encode(src);
     }
 }

@@ -1,6 +1,7 @@
 package com.tobiakindele.parceldelivery.validators;
 
 import com.tobiakindele.parceldelivery.utils.ConstantUtils;
+import com.tobiakindele.parceldelivery.utils.Utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.faces.application.FacesMessage;
@@ -22,7 +23,7 @@ public class EmailValidator implements Validator{
     private Matcher matcher;
     
     public EmailValidator(){
-        pattern = Pattern.compile(ConstantUtils.EMAIL_PATTERN, Pattern.CASE_INSENSITIVE);
+        pattern = Utils.compilePattern(ConstantUtils.EMAIL_PATTERN, Pattern.CASE_INSENSITIVE);
     }
     
     @Override
