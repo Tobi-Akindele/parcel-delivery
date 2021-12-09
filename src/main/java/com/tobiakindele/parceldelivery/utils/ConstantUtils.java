@@ -12,4 +12,8 @@ public class ConstantUtils {
             + "[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*"
             + "(\\.[A-Za-z]{2,})$";
     public static final String DATE_FORMAT = "dd/MM/yyyy";
+    public static final String PASSWORD_REGEX = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$";
+    public static final String POSTCODE_REGEX = "/[A-Z]{1,2}[0-9]{1,2}[A-Z]?\\s?[0-9][A-Z]{2}/i";
+    public static final String PERSIST_UNIT = "delis-parcel-delivery";
+    public static final String PASSWORD_FORM_UI_ID = "password";
 }

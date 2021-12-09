@@ -83,28 +83,29 @@ $(document).ready(function () {
             length.classList.remove("valid");
             length.classList.add("invalid");
         }
-//        console.log('Password:' + passwordInput.value);
-//        console.log('cPassword:' + cPasswordInput.value);
+
         //Check password match
-        if (passwordInput.value === cPasswordInput.value) {
-            passwordMatch.classList.remove("invalid");
-            passwordMatch.classList.add("valid");
-        } else {
-            passwordMatch.classList.remove("valid");
-            passwordMatch.classList.add("invalid");
+        if (passwordInput.value && cPasswordInput.value) {
+            if (passwordInput.value === cPasswordInput.value) {
+                passwordMatch.classList.remove("invalid");
+                passwordMatch.classList.add("valid");
+            } else {
+                passwordMatch.classList.remove("valid");
+                passwordMatch.classList.add("invalid");
+            }
         }
     };
 
     cPasswordInput.onkeyup = function () {
-        console.log('Password:' + passwordInput.value);
-        console.log('cPassword:' + cPasswordInput.value);
         //Check password match
-        if (passwordInput.value === cPasswordInput.value) {
-            passwordMatch.classList.remove("invalid");
-            passwordMatch.classList.add("valid");
-        } else {
-            passwordMatch.classList.remove("valid");
-            passwordMatch.classList.add("invalid");
+        if (passwordInput.value && cPasswordInput.value) {
+            if (passwordInput.value === cPasswordInput.value) {
+                passwordMatch.classList.remove("invalid");
+                passwordMatch.classList.add("valid");
+            } else {
+                passwordMatch.classList.remove("valid");
+                passwordMatch.classList.add("invalid");
+            }
         }
     };
 });

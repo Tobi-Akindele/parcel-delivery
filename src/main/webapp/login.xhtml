@@ -1,21 +1,107 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                template="./main_template.xhtml">
 
-    <body>
+    <ui:define name="title">
+        Delis: Login
+    </ui:define>
 
-        <ui:composition template="./main_template.xhtml">
+    <ui:define name="menu"></ui:define>
 
-            <ui:define name="title">
-                Delis: Login
-            </ui:define>
+    <ui:define name="content">
 
-            <ui:define name="content">
-                Login page
-            </ui:define>
+        <style>
+            html,
+            body {
+                height: 100%;
+            }
 
-        </ui:composition>
+            body {
+                display: flex;
+                align-items: center;
+                padding-top: 40px;
+                padding-bottom: 40px;
+                background-color: #f5f5f5;
+            }
 
-    </body>
-</html>
+            .form-signin {
+                width: 100%;
+                max-width: 350px;
+                padding: 15px;
+                margin: auto;
+            }
+
+            .form-signin .space {
+                height: 15px;
+            }
+
+            .form-signin .form-floating:focus-within {
+                z-index: 2;
+            }
+
+            .form-signin #email {
+                margin-bottom: -1px;
+                border-bottom-right-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+
+            .form-signin #password {
+                margin-bottom: 10px;
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+            }
+
+            .bd-placeholder-img {
+                font-size: 1.125rem;
+                text-anchor: middle;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                user-select: none;
+            }
+
+            @media (min-width: 768px) {
+                .bd-placeholder-img-lg {
+                    font-size: 3.5rem;
+                }
+            }
+        </style>
+
+        <div class="text-center">
+            <main class="form-signin">
+                <h:form id="loginForm">
+
+                    <h2 class="mb-4" alt="Site name" width="72" height="57">Delis Parcel Delivery</h2>
+                    <h1 class="h5 mb-3 fw-normal">Please sign in</h1>
+
+                    <div class="form-floating">
+                        <h:inputText id="email" styleClass="form-control" value="" />
+                        <label for="email">Email address</label>
+                    </div>
+
+                    <div class="form-floating">
+                        <h:inputSecret id="password" class="form-control" value="" />
+                        <label for="password">Password</label>
+                    </div>
+
+                    <div class="space mb-3"></div>
+
+                    <button class="w-100 btn btn-secondary" type="submit">Login</button>
+
+                    <div class="space mb-3"></div>
+
+                    <div class="form-floating">
+                        <h:link outcome="sign_up">
+                            Don't have account? Sign up.
+                        </h:link>
+                    </div>
+
+                </h:form>
+            </main>
+        </div>
+
+    </ui:define>
+
+</ui:composition>
