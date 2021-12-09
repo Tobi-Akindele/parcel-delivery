@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
     public User createUser(User user) throws ValidatorException {
 
         if (!user.getPassword().equals(user.getConfirmPassword())) {
-            FacesMessage msg = new FacesMessage("E-mail validation failed.", "Email is invalid.");
+            FacesMessage msg = new FacesMessage("Password validation failed.", "Password does not match.");
             msg.setSeverity(FacesMessage.SEVERITY_ERROR);
             FacesContext.getCurrentInstance().addMessage(ConstantUtils.PASSWORD_FORM_UI_ID, msg);
             throw new ValidatorException(msg);
