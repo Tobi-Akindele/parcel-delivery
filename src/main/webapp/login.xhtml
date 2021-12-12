@@ -77,6 +77,11 @@
                     <h1 class="h5 mb-3 fw-normal">Please sign in</h1>
 
                     <div class="form-floating">
+                        <h:outputLabel id="successSignUpMessage" styleClass="form-control" value="" />
+                        <h:message for="successSignUpMessage" styleClass="text-success" />
+                    </div>
+                    
+                    <div class="form-floating">
                         <h:inputText id="email" styleClass="form-control" value="" />
                         <label for="email">Email address</label>
                     </div>
@@ -88,13 +93,23 @@
 
                     <div class="space mb-3"></div>
 
-                    <button class="w-100 btn btn-secondary" type="submit">Login</button>
+                    <button class="w-100 btn btn-primary" type="submit">Login</button>
 
                     <div class="space mb-3"></div>
 
                     <div class="form-floating">
                         <h:link outcome="sign_up">
-                            Don't have account? Sign up.
+                            Don't have account? Sign up
+                        </h:link>
+                    </div>
+                    
+                    <div class="form-floating">
+                        <span>or</span>
+                    </div>
+                    
+                    <div class="form-floating">
+                        <h:link outcome="driver_signup">
+                            Become a Driver
                         </h:link>
                     </div>
 

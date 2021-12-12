@@ -7,7 +7,7 @@ import com.tobiakindele.parceldelivery.models.User;
  * @author oyindamolaakindele
  */
 
-public interface UserDao {
-    
-    public User save(User user);
+public interface UserDao extends AbstractDao<User> {
+     
+    public User findByEmail(String email);
 }

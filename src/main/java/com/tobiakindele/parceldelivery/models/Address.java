@@ -6,15 +6,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 /**
  *
  * @author oyindamolaakindele
  */
 
-@Entity
-@Table(name = "Address")
+@Entity(name = "Address")
 public class Address implements Serializable {
     
     @Id
@@ -24,7 +22,7 @@ public class Address implements Serializable {
     private String city;
     @Column
     private String street;
-    @Column
+    @Column(name = "post_code")
     private String postCode;
 
     public Long getId() {
