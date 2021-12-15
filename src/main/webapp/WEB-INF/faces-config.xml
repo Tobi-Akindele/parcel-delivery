@@ -3,9 +3,13 @@
               xmlns="http://xmlns.jcp.org/xml/ns/javaee"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
-<application>  
-  <!-- This supports resources referenced from within css files e.g. url(../fonts/glyphicons) -->
-    <resource-handler>org.omnifaces.resourcehandler.UnmappedResourceHandler</resource-handler>
-</application>
+    <application>  
+        <!-- This supports resources referenced from within css files e.g. url(../fonts/glyphicons) -->
+        <resource-handler>org.omnifaces.resourcehandler.UnmappedResourceHandler</resource-handler>
+    </application>
+
+    <factory>
+        <exception-handler-factory>com.tobiakindele.parceldelivery.exceptionhandler.CustomExceptionHandlerFactory</exception-handler-factory>
+    </factory>
 
 </faces-config>

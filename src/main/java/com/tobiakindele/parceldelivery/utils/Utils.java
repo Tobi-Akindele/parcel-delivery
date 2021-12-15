@@ -19,7 +19,8 @@ public class Utils {
     private static final Logger logger = Logger.getLogger(Utils.class.getName());
 
     public static boolean isEmpty(Object obj) {
-        return Objects.isNull(obj) || obj.toString().trim().isEmpty();
+        return Objects.isNull(obj) || obj.toString().trim().isEmpty() 
+                || obj.toString().trim().equalsIgnoreCase("null");
     }
 
     public static Date getDateByFormat(String format, String value) {
@@ -50,5 +51,15 @@ public class Utils {
     
     public static String encryptPassword(String src){
         return new BCryptPasswordEncoder().encode(src);
+    }
+    
+    public static String extractExceptionMessage(String src){
+        if(isEmpty(src))
+            return src;
+        return src.substring(src.lastIndexOf(":") + 1).trim();
+    }
+    
+    public static boolean passwordMatches(String rawPassword, String encodedPassword){
+        return new BCryptPasswordEncoder().matches(rawPassword, encodedPassword);
     }
 }

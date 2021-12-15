@@ -19,9 +19,12 @@ import javax.persistence.Transient;
  *
  * @author oyindamolaakindele
  */
+
 @Entity(name = "Users")
 @Cacheable
 public class User extends AbstractModel {
+    
+    protected static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,5 @@
 package com.tobiakindele.parceldelivery.models;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,7 +12,9 @@ import javax.persistence.Id;
  */
 
 @Entity(name = "Address")
-public class Address implements Serializable {
+public class Address extends AbstractModel {
+    
+    private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

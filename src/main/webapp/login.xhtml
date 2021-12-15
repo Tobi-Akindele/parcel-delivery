@@ -82,18 +82,20 @@
                     </div>
                     
                     <div class="form-floating">
-                        <h:inputText id="email" styleClass="form-control" value="" />
+                        <h:inputText id="email" styleClass="form-control" 
+                                     value="#{loginRequest.email}" required="true" requiredMessage="Email is required" />
                         <label for="email">Email address</label>
                     </div>
 
                     <div class="form-floating">
-                        <h:inputSecret id="password" class="form-control" value="" />
+                        <h:inputSecret id="password" class="form-control" 
+                                       value="#{loginRequest.password}" required="true" requiredMessage="Password is required" />
                         <label for="password">Password</label>
                     </div>
 
                     <div class="space mb-3"></div>
 
-                    <button class="w-100 btn btn-primary" type="submit">Login</button>
+                    <h:commandLink class="w-100 btn btn-primary" type="submit" action="#{loginRequest.requestLogin()}" >Login</h:commandLink>
 
                     <div class="space mb-3"></div>
 
