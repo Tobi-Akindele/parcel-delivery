@@ -77,6 +77,9 @@
             <div class="row main-content">
                 <div class="col-md-12 content-area">
                     <div class="content">
+                        <ui:insert name="errorMessage">
+                            <h:messages globalOnly="true" showSummary="true" style="color:red"></h:messages>
+                        </ui:insert>
                         <ui:insert name="content"> Content </ui:insert>
                     </div>
 <!--                <div class="sidebar">

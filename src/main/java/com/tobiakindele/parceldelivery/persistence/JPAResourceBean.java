@@ -11,11 +11,11 @@ import javax.persistence.Persistence;
  */
 
 public class JPAResourceBean {
-    
-    protected EntityManagerFactory entityManagerFactory;
-    
-    public EntityManagerFactory getEMF(){
-        if(entityManagerFactory == null){
+
+    protected static EntityManagerFactory entityManagerFactory;
+
+    public static EntityManagerFactory getEMF() {
+        if (entityManagerFactory == null) {
             entityManagerFactory = Persistence.createEntityManagerFactory(ConstantUtils.PERSIST_UNIT, new HashMap<>());
         }
         return entityManagerFactory;

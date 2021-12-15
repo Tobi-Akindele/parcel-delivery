@@ -24,9 +24,9 @@ public class DateConverter implements Converter {
 
     @Override
     public Date getAsObject(FacesContext fc, UIComponent uic, String value) {
-        try{
-           return Utils.getDateByFormat(ConstantUtils.DATE_FORMAT, value);
-        } catch(Exception e){
+        try {
+            return Utils.isEmpty(value) ? null : Utils.getDateByFormat(ConstantUtils.DATE_FORMAT, value);
+        } catch (Exception e) {
             LoggerUtil.logError(logger, Level.SEVERE, e);
             throw new ConverterException("Date failed to convert");
         }
@@ -37,6 +37,6 @@ public class DateConverter implements Converter {
         if(!(value instanceof Date)){
             throw new ConverterException("Value not a Date object");
         }
-        return Utils.getDateStringByFormat(ConstantUtils.DATE_FORMAT, (Date) value);
+        return value != null ? Utils.getDateStringByFormat(ConstantUtils.DATE_FORMAT, (Date) value) : null;
     }
 }

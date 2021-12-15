@@ -77,24 +77,41 @@
                     <h1 class="h5 mb-3 fw-normal">Please sign in</h1>
 
                     <div class="form-floating">
-                        <h:inputText id="email" styleClass="form-control" value="" />
+                        <h:outputLabel id="successSignUpMessage" styleClass="form-control" value="" />
+                        <h:message for="successSignUpMessage" styleClass="text-success" />
+                    </div>
+                    
+                    <div class="form-floating">
+                        <h:inputText id="email" styleClass="form-control" 
+                                     value="#{loginRequest.email}" required="true" requiredMessage="Email is required" />
                         <label for="email">Email address</label>
                     </div>
 
                     <div class="form-floating">
-                        <h:inputSecret id="password" class="form-control" value="" />
+                        <h:inputSecret id="password" class="form-control" 
+                                       value="#{loginRequest.password}" required="true" requiredMessage="Password is required" />
                         <label for="password">Password</label>
                     </div>
 
                     <div class="space mb-3"></div>
 
-                    <button class="w-100 btn btn-secondary" type="submit">Login</button>
+                    <h:commandLink class="w-100 btn btn-primary" type="submit" action="#{loginRequest.requestLogin()}" >Login</h:commandLink>
 
                     <div class="space mb-3"></div>
 
                     <div class="form-floating">
                         <h:link outcome="sign_up">
-                            Don't have account? Sign up.
+                            Don't have account? Sign up
+                        </h:link>
+                    </div>
+                    
+                    <div class="form-floating">
+                        <span>or</span>
+                    </div>
+                    
+                    <div class="form-floating">
+                        <h:link outcome="driver_signup">
+                            Become a Driver
                         </h:link>
                     </div>
 

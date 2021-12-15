@@ -1,16 +1,16 @@
 package com.tobiakindele.parceldelivery.models;
 
-import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -20,35 +20,49 @@ import javax.persistence.Transient;
  * @author oyindamolaakindele
  */
 
-@Entity
-@Table(name = "Users")
-public class User implements Serializable {
+@Entity(name = "Users")
+@Cacheable
+public class User extends AbstractModel {
     
+    protected static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
     private String email;
-    @Column
+    @Column(name = "first_name")
     private String firstName;
-    @Column
+    @Column(name = "last_name")
     private String lastName;
-    @Column
+    @Column(name = "date_of_birth")
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
+
+    @Column(name = "date_joined")
     @Temporal(TemporalType.DATE)
     private Date dateJoined;
-    
-    @OneToOne(cascade =  CascadeType.ALL)
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id")
     private Address address;
     @Column
     private String password;
-    @Column
-    private Boolean verified;
-    
+    @Column(name = "email_verified")
+    private Boolean emailVerified;
+
+    @Column(name = "user_type")
+    private String userType;
+
     @Transient
     private String confirmPassword;
+
+    public User() {
+    }
+
+    public User(Address address) {
+        this.address = new Address();
+    }
 
     public Long getId() {
         return id;
@@ -114,12 +128,12 @@ public class User implements Serializable {
         this.confirmPassword = confirmPassword;
     }
 
-    public Boolean getVerified() {
-        return verified;
+    public Boolean getEmailVerified() {
+        return emailVerified;
     }
 
-    public void setVerified(Boolean verified) {
-        this.verified = verified;
+    public void setEmailVerified(Boolean emailVerified) {
+        this.emailVerified = emailVerified;
     }
 
     public Date getDateJoined() {
@@ -128,5 +142,13 @@ public class User implements Serializable {
 
     public void setDateJoined(Date dateJoined) {
         this.dateJoined = dateJoined;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 }

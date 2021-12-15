@@ -16,24 +16,25 @@ import javax.faces.validator.ValidatorException;
  * @author oyindamolaakindele
  */
 
-@FacesValidator("com.tobiakindele.parceldelivery.validators.PasswordValidator")
-public class PasswordValidator implements Validator {
-    
+@FacesValidator("com.tobiakindele.parceldelivery.validators.EmailPatternValidator")
+public class EmailPatternValidator implements Validator{
+
     private final Pattern pattern;
     private Matcher matcher;
     
-    public PasswordValidator(){
-        pattern = Utils.compilePattern(ConstantUtils.PASSWORD_REGEX);
+    public EmailPatternValidator(){
+        pattern = Utils.compilePattern(ConstantUtils.EMAIL_PATTERN, Pattern.CASE_INSENSITIVE);
     }
-
+    
     @Override
     public void validate(FacesContext fc, UIComponent uic, Object value) throws ValidatorException {
         matcher = pattern.matcher(value.toString());
         if (!matcher.matches()) {
             FacesMessage msg
-                    = new FacesMessage("Password rule is not satisfied.", "Password must contain at least one lowercase character, uppercase character, and a number.");
+                    = new FacesMessage("E-mail validation failed.", "Email is invalid.");
             msg.setSeverity(FacesMessage.SEVERITY_ERROR);
             throw new ValidatorException(msg);
         }
     }
+
 }
