@@ -7,6 +7,8 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javax.faces.context.FacesContext;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
@@ -61,5 +63,13 @@ public class Utils {
     
     public static boolean passwordMatches(String rawPassword, String encodedPassword){
         return new BCryptPasswordEncoder().matches(rawPassword, encodedPassword);
+    }
+    
+    public static String generateVerificationCode(){
+        return RandomStringUtils.randomAlphanumeric(64) + System.currentTimeMillis();
+    }
+    
+    public static String getServerURL(FacesContext context){
+        return context.getExternalContext().getInitParameter("Site.URL");
     }
 }

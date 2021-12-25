@@ -23,6 +23,41 @@
         <welcome-file>faces/login.xhtml</welcome-file>
     </welcome-file-list>
     
+    <context-param>
+        <param-name>SMTP.Host</param-name>
+        <param-value>smtp.mailtrap.io</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>SMTP.Port</param-name>
+        <param-value>25</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>MAIL.From</param-name>
+        <param-value>no_reply@delisparceldelivery.com</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>SMTP.Username</param-name>
+        <param-value>b15bcc67e1cab3</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>SMTP.Password</param-name>
+        <param-value>dcefd9d1203955</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>SMTP.Auth</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>Site.URL</param-name>
+        <param-value>http://localhost:8080/parcel-delivery/faces</param-value>
+    </context-param>
+    
     <mime-mapping>
       <extension>ttf</extension>
       <mime-type>css/fonts</mime-type>

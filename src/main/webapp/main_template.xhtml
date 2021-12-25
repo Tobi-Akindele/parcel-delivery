@@ -22,12 +22,13 @@
         <h:outputScript library="js" name="script.js" />
 
         <title><ui:insert name="title">Delis: Home</ui:insert></title>
+        <ui:insert name="head"></ui:insert>
     </h:head>
 
     <h:body>
 
         <div class="container-fluid">
-            <div class="row fixed-top col-md-12 menu">
+            <div class="row menu">
                 <!--<div class="">-->
                     <ui:insert name="menu">
                         <div class="row w-auto">
@@ -77,9 +78,6 @@
             <div class="row main-content">
                 <div class="col-md-12 content-area">
                     <div class="content">
-                        <ui:insert name="errorMessage">
-                            <h:messages globalOnly="true" showSummary="true" style="color:red"></h:messages>
-                        </ui:insert>
                         <ui:insert name="content"> Content </ui:insert>
                     </div>
 <!--                <div class="sidebar">
@@ -88,8 +86,8 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-12 footer fixed-bottom">
+            <div class="row fixed-bottom">
+                <div class="col-md-12 footer">
                     <ui:insert name="footer"> &copy; Tobi Akindele. Ref: 21023489 Staffordshire University </ui:insert>
                 </div>
             </div>

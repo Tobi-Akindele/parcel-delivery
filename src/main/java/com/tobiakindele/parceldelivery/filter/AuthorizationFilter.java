@@ -34,7 +34,8 @@ public class AuthorizationFilter implements Filter {
             String requestURI = request.getRequestURI();
             if (requestURI.contains("/login.xhtml")
                     || requestURI.contains("/sign_up.xhtml")
-                    || requestURI.contains("driver_signup.xhtml")
+                    || requestURI.contains("/driver_signup.xhtml")
+                    || requestURI.contains("/activate.xhtml")
                     || requestURI.contains("/public/")
                     || requestURI.contains("javax.faces.resource")
                     || (session != null && !Utils.isEmpty(session.getAttribute("email")))) {
