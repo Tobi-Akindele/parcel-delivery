@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS Users(
     email_verified BIT NOT NULL,
     address_id INTEGER,
     user_type VARCHAR(15) NOT NULL,
+    verification_code VARCHAR(255) NULL,
     
     PRIMARY KEY (id),
     FOREIGN KEY (address_id) REFERENCES Address(id)

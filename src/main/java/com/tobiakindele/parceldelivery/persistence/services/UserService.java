@@ -1,8 +1,6 @@
 package com.tobiakindele.parceldelivery.persistence.services;
 
-import com.tobiakindele.parceldelivery.models.User;
-
-import javax.faces.validator.ValidatorException;
+import com.tobiakindele.parceldelivery.dto.UserDto;
 
 /**
  *
@@ -11,11 +9,15 @@ import javax.faces.validator.ValidatorException;
 
 public interface UserService {
     
-    public User createUser(User user) throws ValidatorException;
+    public UserDto createUser(UserDto user);
     
-    public User findByEmail(String email);
+    public UserDto findByEmail(String email);
     
-    public User login(String email, String password);
+    public UserDto findById(Long id);
     
-    public String logout();
+    public UserDto login(String email, String password);
+    
+    public void logout();
+    
+    public boolean verifyUser(String verificationCode);
 }

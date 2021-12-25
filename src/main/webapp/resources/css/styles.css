@@ -31,7 +31,6 @@
 }
 
 .main-content{
-    margin-top: 10px;
     margin-bottom: 50px;
 }
 
@@ -45,4 +44,12 @@
     width: 50%;
     box-sizing: border-box;
     float: right;
+}
+
+.info{
+  color: green;
+}
+
+.err{
+  color: red;
 }

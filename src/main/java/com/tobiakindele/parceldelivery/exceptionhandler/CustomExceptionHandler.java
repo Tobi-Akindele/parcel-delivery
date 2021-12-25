@@ -1,6 +1,7 @@
 package com.tobiakindele.parceldelivery.exceptionhandler;
 
 import com.tobiakindele.parceldelivery.utils.ConstantUtils;
+import com.tobiakindele.parceldelivery.utils.MessageUtils;
 import com.tobiakindele.parceldelivery.utils.Utils;
 import java.util.Iterator;
 import javax.faces.FacesException;
@@ -36,18 +37,13 @@ public class CustomExceptionHandler extends ExceptionHandlerWrapper {
             ExceptionQueuedEvent event = eventIterator.next();
             ExceptionQueuedEventContext eventContext = (ExceptionQueuedEventContext) event.getSource();
             Throwable throwable = eventContext.getException();
-            FacesContext facesContext = FacesContext.getCurrentInstance();
             try {
                 String genericMessage = "An Internal Server Error occurred, kindly contact system administrator at: " + ConstantUtils.SYS_ADMIN_EMAIL;
-//                String message = throwable instanceof ValidationException ? throwable.getMessage() : genericMessage;
-String message;
-                if(throwable.getClass() == FacesException.class){
-                    message = Utils.extractExceptionMessage(throwable.getCause().getLocalizedMessage());
-                } else {
-                    message = genericMessage;
-                }
-                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, message,
-                        message));
+                String message = throwable.getClass() == FacesException.class 
+                        ? Utils.extractExceptionMessage(throwable.getCause().getLocalizedMessage()) 
+                        : genericMessage;
+                
+                MessageUtils.addErrorMessage(message);
             } finally {
                 eventIterator.remove();
             }

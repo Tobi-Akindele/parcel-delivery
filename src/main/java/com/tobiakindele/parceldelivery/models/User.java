@@ -1,6 +1,7 @@
 package com.tobiakindele.parceldelivery.models;
 
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -24,17 +25,21 @@ import javax.persistence.Transient;
 @Cacheable
 public class User extends AbstractModel {
     
-    protected static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     @Column
     private String email;
+    
     @Column(name = "first_name")
     private String firstName;
+    
     @Column(name = "last_name")
     private String lastName;
+    
     @Column(name = "date_of_birth")
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
@@ -46,13 +51,18 @@ public class User extends AbstractModel {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id")
     private Address address;
+    
     @Column
     private String password;
+    
     @Column(name = "email_verified")
     private Boolean emailVerified;
 
     @Column(name = "user_type")
     private String userType;
+    
+    @Column(name = "verification_code")
+    private String verificationCode;
 
     @Transient
     private String confirmPassword;
@@ -151,4 +161,36 @@ public class User extends AbstractModel {
     public void setUserType(String userType) {
         this.userType = userType;
     }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.id);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (this == obj) {
+            return true;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final User other = (User) obj;
+        return Objects.equals(this.id, other.id);
+    }
+    
+    
 }

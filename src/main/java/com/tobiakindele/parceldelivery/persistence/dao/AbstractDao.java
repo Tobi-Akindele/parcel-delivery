@@ -6,15 +6,16 @@ import com.tobiakindele.parceldelivery.models.AbstractModel;
  *
  * @author oyindamolaakindele
  * @param <T>
+ * @param <U>
  */
 
-public interface AbstractDao<T extends AbstractModel> {
+public interface AbstractDao<T extends AbstractModel, U> {
     
-    public T save(T t);
+    public U save(T t);
     
-    public T read(Long id);
+    public U read(Long id);
     
-    public T update(T t);
+    public U update(T t);
     
     public void delete(Long id);
 }

@@ -1,5 +1,7 @@
 package com.tobiakindele.parceldelivery.persistence.dao.impl;
 
+import com.tobiakindele.parceldelivery.dto.UserDto;
+import com.tobiakindele.parceldelivery.mapper.ObjectMapper;
 import com.tobiakindele.parceldelivery.persistence.JPAResourceBean;
 import com.tobiakindele.parceldelivery.models.User;
 import com.tobiakindele.parceldelivery.persistence.dao.UserDao;
@@ -9,6 +11,8 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
+import org.dozer.Mapper;
+import org.dozer.MappingException;
 
 
 /**
@@ -22,17 +26,41 @@ public class UserDaoImpl implements UserDao {
     
     private static final EntityManagerFactory emf = JPAResourceBean.getEMF();
     
+    private static final Mapper mapper = ObjectMapper.getMapper();
+    
     private static final String FIND_BY_EMAIL = "SELECT u FROM Users u WHERE u.email = :email";
+    
+    private static final String FIND_BY_VERIFICATION_CODE = "SELECT u FROM Users u WHERE u.verificationCode = :verificationCode";
 
     @Override
-    public User findByEmail(String email) {
+    public UserDto findByEmail(String email) {
         final EntityManager em = emf.createEntityManager();
         try {
-            return em.createQuery(FIND_BY_EMAIL, User.class).setParameter("email", email).getSingleResult();
+            return mapper.map(em.createQuery(FIND_BY_EMAIL, User.class)
+                    .setParameter("email", email).getSingleResult(), UserDto.class);
         } catch (NoResultException e) {
             LoggerUtil.logError(logger, Level.INFO, e);
             return null;
-        } catch (Exception e) {
+        } catch (MappingException e) {
+            LoggerUtil.logError(logger, Level.SEVERE, e);
+            throw e;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+    
+    @Override
+    public UserDto findByVerificationCode(String verificationCode) {
+        final EntityManager em = emf.createEntityManager();
+        try {
+            return mapper.map(em.createQuery(FIND_BY_VERIFICATION_CODE, User.class)
+                    .setParameter("verificationCode", verificationCode).getSingleResult(), UserDto.class);
+        } catch (NoResultException e) {
+            LoggerUtil.logError(logger, Level.INFO, e);
+            return null;
+        } catch (MappingException e) {
             LoggerUtil.logError(logger, Level.SEVERE, e);
             throw e;
         } finally {
@@ -43,7 +71,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User save(User user) {
+    public UserDto save(User user) {
         final EntityManager em = emf.createEntityManager();
         try {
             if (!em.getTransaction().isActive()) {
@@ -59,15 +87,17 @@ public class UserDaoImpl implements UserDao {
                 em.close();
             }
         }
-
-        return user;
+        return mapper.map(user, UserDto.class);
     }
 
     @Override
-    public User read(Long id) {
+    public UserDto read(Long id) {
         final EntityManager em = emf.createEntityManager();
         try {
-            return em.find(User.class, id);
+            return mapper.map(em.find(User.class, id), UserDto.class);
+        } catch (MappingException e) {
+            LoggerUtil.logError(logger, Level.SEVERE, e);
+            throw e;
         } catch (Exception e) {
             LoggerUtil.logError(logger, Level.SEVERE, e);
             throw e;
@@ -79,8 +109,23 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User update(User t) {
-        return null;
+    public UserDto update(User user) {
+        final EntityManager em = emf.createEntityManager();
+        try {
+            if (!em.getTransaction().isActive()) {
+                em.getTransaction().begin();
+            }
+            em.merge(user);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            LoggerUtil.logError(logger, Level.SEVERE, e);
+            throw e;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        return mapper.map(user, UserDto.class);
     }
 
     @Override

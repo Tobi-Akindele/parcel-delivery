@@ -1,16 +1,14 @@
 package com.tobiakindele.parceldelivery.managedbean;
 
+import com.tobiakindele.parceldelivery.dto.AddressDto;
+import com.tobiakindele.parceldelivery.dto.UserDto;
 import com.tobiakindele.parceldelivery.enums.UserType;
-import com.tobiakindele.parceldelivery.models.Address;
-import com.tobiakindele.parceldelivery.models.User;
 import com.tobiakindele.parceldelivery.persistence.services.UserService;
 import com.tobiakindele.parceldelivery.persistence.services.impl.UserServiceImpl;
-import com.tobiakindele.parceldelivery.utils.ConstantUtils;
+import com.tobiakindele.parceldelivery.utils.MessageUtils;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 
 /**
  *
@@ -20,43 +18,34 @@ import javax.faces.context.FacesContext;
 @RequestScoped
 public class SignUpRequest {
 
-    private User user;
+    private UserDto userDto;
 
-    private UserService userService = new UserServiceImpl();
+    private final UserService userService;
     
     @PostConstruct
     public void init() {
-        user = new User(new Address());
+        userDto = new UserDto(new AddressDto());
     }
 
     /**
      * Creates a new instance of SignUpRequest
      */
     public SignUpRequest() {
+        this.userService = new UserServiceImpl();
     }
 
-    public User getUser() {
-        return user;
+    public UserDto getUserDto() {
+        return userDto;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserDto(UserDto userDto) {
+        this.userDto = userDto;
     }
     
     public String registerUser(){
-        user.setUserType(UserType.USER.name());
-        userService.createUser(user);
-        FacesContext context = FacesContext.getCurrentInstance();
-        context.addMessage(ConstantUtils.SIGN_UP_SUCCESS, new FacesMessage("User signup", "Account creation successful."));
-        context.getExternalContext().getFlash().setKeepMessages(true);
-        return "login";
-    }
-
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
+        userDto.setUserType(UserType.USER.name());
+        userService.createUser(userDto);
+        MessageUtils.addSuccessMessageWithFlash("Account creation successful.");
+        return "login?faces-redirect=true";
     }
 }

@@ -3,23 +3,289 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 template="./main_template.xhtml"
-                xmlns:h="http://xmlns.jcp.org/jsf/html">
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <ui:define name="title">
         Delis: Home 
     </ui:define>
 
+    <ui:define name="menu">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <h:link class="navbar-brand fw-bold fs-3" outcome="user_home">Delis Parcel Delivery</h:link>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <h:form>
+                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                        <ul class="navbar-nav container-fluid justify-content-end">
+                            <li class="nav-item">
+                                <h:outputText class="nav-link" value="Welcome, #{ loginRequest.userDto.firstName}" />
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <h:graphicImage library="images" name="person_icon.png" width="50px" height="50px" styleClass="rounded-circle" />
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><h:link class="dropdown-item" outcome="sign_up">Profile</h:link></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><h:commandLink class="dropdown-item" action="#{loginRequest.requestLogout()}">Logout</h:commandLink></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </h:form>
+            </div>
+        </nav>
+    </ui:define>
+
     <ui:define name="content">
-        <div class="row main-content">
-            <div class="col-md-12 content-area">
-                <div class="content">
-                    User Home page
-                    Hello
-                    <h:outputText value="Sir. #{login.user.firstName}" />
+        
+        <div class="mb-3 float-end">
+            <h:form>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createRequestModal">
+                    Create Request
+                </button>
+                <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewRequestModal">
+                    View Request
+                </button>
+                <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createRequestModal">
+                    Update Request
+                </button>
+                <h:commandButton value="Delete Request" type="button" class="btn btn-primary m-1" action="user_home" />
+            </h:form>
+        </div>
+        
+        <h:form id="dataTableForm">
+            
+            <h:messages globalOnly="true" errorClass="err" infoClass="info"></h:messages>
+
+            <div class="container mb-3" style="width: 15%;">
+                <h:selectOneMenu value="#{ups.status}" onchange="submit()" valueChangeListener="#{ups.refreshData}" class="form-control-sm float-end">
+                    <f:selectItem itemValue="All" itemLabel="All" />
+                    <f:selectItem itemValue="Pending" itemLabel="Pending" />
+                    <f:selectItem itemValue="Completed" itemLabel="Completed" />                   
+                </h:selectOneMenu>
+            </div>
+
+            <h:dataTable id="dataTable" value="#{ups.dataModel}" var="pd"
+                         styleClass="table" headerClass="headers"
+                         rowClasses="oddRows,evenRows" border="1" cellspacing="0"
+                         cellpadding="5" frame="box">
+
+                <h:column>
+                    <f:facet name="header">Parcel Name</f:facet>
+                        #{pd.name}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Parcel Description</f:facet>
+                        #{pd.description}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Delivery Status</f:facet>
+                        #{pd.status}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Date Added</f:facet>
+                        #{pd.createdAt}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Picked up At</f:facet>
+                        #{pd.pickupAddress}
+                </h:column>
+                
+                <h:column>
+                    <f:facet name="header">Select</f:facet>
+                    
+                    <h:selectOneRadio
+                        onclick="dataTableSelectOneRadio(this);">
+                        <f:selectItem itemValue="#{pd.id}" />
+                        <f:ajax execute="@this" listener="#{parcelRequest.setSelected(pd.id)}" 
+                                render="viewParcelName viewParcelDescription viewParcelPickupAddress 
+                                viewParcelDestinationAddress viewParcelCreatedDate viewParcelStatus viewParcelDriver" />
+
+                    </h:selectOneRadio>
+                </h:column>
+
+            </h:dataTable>
+
+            <h:panelGroup rendered="#{ups.dataModel.rowCount > 0}">
+                <h:outputText value="#{ups.pagination.pageFirstItem + 1} ... #{ups.pagination.pageLastItem + 1}/#{ups.pagination.count}" /> &nbsp;
+                <h:commandLink action="#{ups.previous}" value="Previous #{ups.pagination.pageSize}" rendered="#{ups.pagination.hasPreviousPage}" /> &nbsp;
+                <h:commandLink action="#{ups.next}" value="Next #{ups.pagination.pageSize}" rendered="#{ups.pagination.hasNextPage}" /> &nbsp;
+            </h:panelGroup>
+
+        </h:form>
+        
+        <!-- Create Request Modal -->
+        <div class="modal fade" id="createRequestModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="createRequestModalLabel" aria-hidden="true">
+            <h:form id="addParcelDelivery">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="createRequestModalLabel">Create Parcel Delivery request</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="container">
+                                <h:messages globalOnly="true" errorClass="err" infoClass="info"></h:messages>
+
+                                <!--Name--> 
+                                <div class="row mb-3">
+                                    <div class="col-sm-4">
+                                        <label for="name" class="col-form-label">Parcel Name <span class="compulsory-fields">*</span>:</label>
+                                    </div>
+                                    <div class="col">
+                                        <h:inputText id="name" class="form-control" label="Parcel Name" 
+                                                     value="#{parcelRequest.parcelDto.name}" required="true" requiredMessage="Name is required">
+                                            <f:validator validatorId="com.tobiakindele.parceldelivery.validators.NotNullValidator" />
+                                        </h:inputText>
+                                        <h:message for="name" style="color:red" />
+                                    </div>
+                                </div>
+
+                                <!--Description--> 
+                                <div class="row mb-3">
+                                    <div class="col-sm-4">
+                                        <label for="description" class="col-form-label">Parcel Description:</label>
+                                    </div>
+                                    <div class="col">
+                                        <h:inputTextarea id="description" class="form-control" label="Parcel Description" 
+                                                         value="#{parcelRequest.parcelDto.description}">
+                                        </h:inputTextarea>
+                                        <h:message for="name" style="color:red" />
+                                    </div>
+                                </div>
+
+                                <!--Pickup Address--> 
+                                <div class="row mb-3">
+                                    <div class="col-sm-4">
+                                        <label for="pickupAddress" class="col-form-label">Pickup Address <span class="compulsory-fields">*</span>:</label>
+                                    </div>
+                                    <div class="col">
+                                        <h:inputText id="pickupAddress" class="form-control" label="Pickup Address" 
+                                                     value="#{parcelRequest.parcelDto.pickupAddress}" required="true" requiredMessage="Pickup Address is required">
+                                            <f:validator validatorId="com.tobiakindele.parceldelivery.validators.NotNullValidator" />
+                                        </h:inputText>
+                                        <h:message for="pickupAddress" style="color:red" />
+                                    </div>
+                                </div>
+
+                                <!--Destination Address--> 
+                                <div class="row mb-3">
+                                    <div class="col-sm-4">
+                                        <label for="destinationAddress" class="col-form-label">Destination Address <span class="compulsory-fields">*</span>:</label>
+                                    </div>
+                                    <div class="col">
+                                        <h:inputText id="destinationAddress" class="form-control" label="Destination Address" 
+                                                     value="#{parcelRequest.parcelDto.destinationAddress}" required="true" requiredMessage="Destination Address is required">
+                                            <f:validator validatorId="com.tobiakindele.parceldelivery.validators.NotNullValidator" />
+                                        </h:inputText>
+                                        <h:message for="destinationAddress" style="color:red" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <h:commandButton value="Submit" class="btn btn-primary" action="#{parcelRequest.saveParcelDeliveryRequest()}" />
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+        </div>
+
+        <!-- View Request Modal -->
+        <div class="modal fade" id="viewRequestModal" tabindex="-1" aria-labelledby="viewRequestModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="viewRequestModalLabel">View Parcel Delivery request</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <h:outputText value="Parcel Name:" />
+                                </div>
+                                <div class="col">
+                                    <h:outputText id="viewParcelName" value="#{parcelRequest.parcelDto.name}" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <h:outputText value="Parcel Description:" />
+                                </div>
+                                <div class="col">
+                                    <h:outputText id="viewParcelDescription" value="#{parcelRequest.parcelDto.description}" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <h:outputText value="Pickup Address:" />
+                                </div>
+                                <div class="col">
+                                    <h:outputText id="viewParcelPickupAddress" value="#{parcelRequest.parcelDto.pickupAddress}" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <h:outputText value="Destination Address:" />
+                                </div>
+                                <div class="col">
+                                    <h:outputText id="viewParcelDestinationAddress" value="#{parcelRequest.parcelDto.destinationAddress}" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <h:outputText value="Date Created:" />
+                                </div>
+                                <div class="col">
+                                    <h:outputText id="viewParcelCreatedDate" value="#{parcelRequest.parcelDto.createdAt}" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <h:outputText value="Status:" />
+                                </div>
+                                <div class="col">
+                                    <h:outputText id="viewParcelStatus" value="#{parcelRequest.parcelDto.status}" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <h:outputText value="Delivered By:" />
+                                </div>
+                                <div class="col">
+                                    <h:outputText id="viewParcelDriver" value="#{parcelRequest.parcelDto.pickedByDto.firstName (Driver)}" />
+                                </div>
+                            </div>
+                        </div>
+                    
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
-
+        
     </ui:define>
 
 </ui:composition>
