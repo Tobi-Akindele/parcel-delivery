@@ -52,16 +52,14 @@ public class UserParcels implements Serializable {
         return pagination;
     }
     
-    public String next() {
+    public void next() {
         getPagination().nextPage();
         recreateModel();
-        return "home";
     }
 
-    public String previous() {
+    public void previous() {
         getPagination().previousPage();
         recreateModel();
-        return "home";
     }
     
     private void recreateModel() {

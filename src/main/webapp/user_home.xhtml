@@ -43,6 +43,10 @@
 
     <ui:define name="content">
         
+        <div class="container">
+            <h:messages globalOnly="true" errorClass="err" infoClass="info"></h:messages>
+        </div>
+        
         <div class="mb-3 float-end">
             <h:form>
                 <!-- Button trigger modal -->
@@ -52,16 +56,16 @@
                 <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewRequestModal">
                     View Request
                 </button>
-                <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createRequestModal">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateRequestModal">
                     Update Request
                 </button>
-                <h:commandButton value="Delete Request" type="button" class="btn btn-primary m-1" action="user_home" />
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteRequestModal">
+                    Delete Request
+                </button>
             </h:form>
         </div>
         
         <h:form id="dataTableForm">
-            
-            <h:messages globalOnly="true" errorClass="err" infoClass="info"></h:messages>
 
             <div class="container mb-3" style="width: 15%;">
                 <h:selectOneMenu value="#{ups.status}" onchange="submit()" valueChangeListener="#{ups.refreshData}" class="form-control-sm float-end">
@@ -108,8 +112,9 @@
                         onclick="dataTableSelectOneRadio(this);">
                         <f:selectItem itemValue="#{pd.id}" />
                         <f:ajax execute="@this" listener="#{parcelRequest.setSelected(pd.id)}" 
-                                render="viewParcelName viewParcelDescription viewParcelPickupAddress 
-                                viewParcelDestinationAddress viewParcelCreatedDate viewParcelStatus viewParcelDriver" />
+                                render="vpn updateParcelDelivery:upn vpdesc updateParcelDelivery:updesc vppa updateParcelDelivery:uppa
+                                vpda updateParcelDelivery:upda vpcd vps vpd updateParcelDelivery:upid deleteParcelDelivery:dpid
+                                deleteParcelDelivery:dpn" />
 
                     </h:selectOneRadio>
                 </h:column>
@@ -136,8 +141,6 @@
                         <div class="modal-body">
 
                             <div class="container">
-                                <h:messages globalOnly="true" errorClass="err" infoClass="info"></h:messages>
-
                                 <!--Name--> 
                                 <div class="row mb-3">
                                     <div class="col-sm-4">
@@ -219,7 +222,7 @@
                                     <h:outputText value="Parcel Name:" />
                                 </div>
                                 <div class="col">
-                                    <h:outputText id="viewParcelName" value="#{parcelRequest.parcelDto.name}" />
+                                    <h:outputText id="vpn" value="#{parcelRequest.parcelDto.name}" />
                                 </div>
                             </div>
 
@@ -228,7 +231,7 @@
                                     <h:outputText value="Parcel Description:" />
                                 </div>
                                 <div class="col">
-                                    <h:outputText id="viewParcelDescription" value="#{parcelRequest.parcelDto.description}" />
+                                    <h:outputText id="vpdesc" value="#{parcelRequest.parcelDto.description}" />
                                 </div>
                             </div>
 
@@ -237,7 +240,7 @@
                                     <h:outputText value="Pickup Address:" />
                                 </div>
                                 <div class="col">
-                                    <h:outputText id="viewParcelPickupAddress" value="#{parcelRequest.parcelDto.pickupAddress}" />
+                                    <h:outputText id="vppa" value="#{parcelRequest.parcelDto.pickupAddress}" />
                                 </div>
                             </div>
 
@@ -246,7 +249,7 @@
                                     <h:outputText value="Destination Address:" />
                                 </div>
                                 <div class="col">
-                                    <h:outputText id="viewParcelDestinationAddress" value="#{parcelRequest.parcelDto.destinationAddress}" />
+                                    <h:outputText id="vpda" value="#{parcelRequest.parcelDto.destinationAddress}" />
                                 </div>
                             </div>
 
@@ -255,7 +258,7 @@
                                     <h:outputText value="Date Created:" />
                                 </div>
                                 <div class="col">
-                                    <h:outputText id="viewParcelCreatedDate" value="#{parcelRequest.parcelDto.createdAt}" />
+                                    <h:outputText id="vpcd" value="#{parcelRequest.parcelDto.createdAt}" />
                                 </div>
                             </div>
 
@@ -264,7 +267,7 @@
                                     <h:outputText value="Status:" />
                                 </div>
                                 <div class="col">
-                                    <h:outputText id="viewParcelStatus" value="#{parcelRequest.parcelDto.status}" />
+                                    <h:outputText id="vps" value="#{parcelRequest.parcelDto.status}" />
                                 </div>
                             </div>
 
@@ -273,7 +276,7 @@
                                     <h:outputText value="Delivered By:" />
                                 </div>
                                 <div class="col">
-                                    <h:outputText id="viewParcelDriver" value="#{parcelRequest.parcelDto.pickedByDto.firstName (Driver)}" />
+                                    <h:outputText id="vpd" value="#{parcelRequest.parcelDto.pickedByDto.firstName (Driver)}" />
                                 </div>
                             </div>
                         </div>
@@ -284,6 +287,129 @@
                     </div>
                 </div>
             </div>
+        </div>
+        
+        <!-- Update Request Modal -->
+        <div class="modal fade" id="updateRequestModal" tabindex="-1" aria-labelledby="updateRequestModalLabel" aria-hidden="true">
+            <h:form id="updateParcelDelivery">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="updateRequestModalLabel">Update Parcel Delivery request</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="container">
+                                <!--Name--> 
+                                <div class="row mb-3">
+                                    <div class="col-sm-4">
+                                        <label for="updateParcelDelivery:upn" class="col-form-label">Parcel Name <span class="compulsory-fields">*</span>:</label>
+                                        <h:inputHidden id="upid" value="#{parcelRequest.parcelDto.id}" />
+                                    </div>
+                                    <div class="col">
+                                        <h:inputText id="upn" class="form-control" label="Parcel Name" 
+                                                     value="#{parcelRequest.parcelDto.name}" 
+                                                     required="true" 
+                                                     requiredMessage="Name is required">
+                                            <f:validator validatorId="com.tobiakindele.parceldelivery.validators.NotNullValidator" />
+                                            <f:ajax event="blur" render="upnMessage" />
+                                        </h:inputText>
+                                        <h:message id="upnMessage" for="updateParcelDelivery:upn" style="color:red" />
+                                    </div>
+                                </div>
+
+                                <!--Description--> 
+                                <div class="row mb-3">
+                                    <div class="col-sm-4">
+                                        <label for="updateParcelDelivery:updesc" class="col-form-label">Parcel Description:</label>
+                                    </div>
+                                    <div class="col">
+                                        <h:inputTextarea id="updesc" class="form-control" label="Parcel Description" 
+                                                         value="#{parcelRequest.parcelDto.description}">
+                                        </h:inputTextarea>
+                                        <h:message for="updateParcelDelivery:updesc" style="color:red" />
+                                    </div>
+                                </div>
+
+                                <!--Pickup Address--> 
+                                <div class="row mb-3">
+                                    <div class="col-sm-4">
+                                        <label for="updateParcelDelivery:uppa" class="col-form-label">Pickup Address <span class="compulsory-fields">*</span>:</label>
+                                    </div>
+                                    <div class="col">
+                                        <h:inputText id="uppa" class="form-control" label="Pickup Address" 
+                                                     value="#{parcelRequest.parcelDto.pickupAddress}" 
+                                                     required="true" 
+                                                     requiredMessage="Pickup Address is required">
+                                            <f:validator validatorId="com.tobiakindele.parceldelivery.validators.NotNullValidator" />
+                                            <f:ajax event="blur" render="uppaMessage" />
+                                        </h:inputText>
+                                        <h:message id="uppaMessage" for="updateParcelDelivery:uppa" style="color:red" />
+                                    </div>
+                                </div>
+
+                                <!--Destination Address--> 
+                                <div class="row mb-3">
+                                    <div class="col-sm-4">
+                                        <label for="updateParcelDelivery:upda" class="col-form-label">Destination Address <span class="compulsory-fields">*</span>:</label>
+                                    </div>
+                                    <div class="col">
+                                        <h:inputText id="upda" class="form-control" label="Destination Address" 
+                                                     value="#{parcelRequest.parcelDto.destinationAddress}" 
+                                                     required="true" 
+                                                     requiredMessage="Destination Address is required">
+                                            <f:validator validatorId="com.tobiakindele.parceldelivery.validators.NotNullValidator" />
+                                            <f:ajax event="blur" render="updaMessage" />
+                                        </h:inputText>
+                                        <h:message id="updaMessage" for="updateParcelDelivery:upda" style="color:red" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <h:commandButton value="Update" 
+                                             class="btn btn-primary"
+                                             action="#{parcelRequest.updateParcelDeliveryRequest()}" />
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+        </div>
+        
+        <!-- Delete Request Modal -->
+        <div class="modal fade" id="deleteRequestModal" tabindex="-1" aria-labelledby="deleteRequestModalLabel" aria-hidden="true">
+            <h:form id="deleteParcelDelivery">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteRequestModalLabel">Delete Parcel Delivery request confirmation</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container">
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <h:inputHidden id="dpid" value="#{parcelRequest.parcelDto.id}" />
+                                        <h:outputText value="Are you sure you want to delete request " />
+                                        <h:outputText id="dpn" class="fw-bolder" value="'#{parcelRequest.parcelDto.name}' ?" />
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <h:commandButton value="Delete" 
+                                             class="btn btn-primary"
+                                             action="#{parcelRequest.deleteParcelDeliveryRequest}" />
+                        </div>
+                    </div>
+                </div>
+            </h:form>
         </div>
         
     </ui:define>
