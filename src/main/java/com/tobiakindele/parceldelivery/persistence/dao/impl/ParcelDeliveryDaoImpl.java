@@ -31,9 +31,6 @@ public class ParcelDeliveryDaoImpl implements ParcelDeliveryDao {
             + " AND p.createdBy = :userId ORDER BY p.id DESC";
     private static final String FIND_BY_STATUS_COUNT = "SELECT COUNT(p.id) FROM ParcelDelivery p WHERE (p.status = :status OR :status IS NULL)"
             + " AND p.createdBy = :userId ";
-    
-//    private static final String FIND_BY_STATUS = "SELECT p FROM ParcelDelivery p ";
-//    private static final String FIND_BY_STATUS_COUNT = "SELECT COUNT(p.id) FROM ParcelDelivery p ";
 
     @Override
     public ParcelDeliveryDto save(ParcelDelivery parcelDelivery) {
@@ -94,7 +91,25 @@ public class ParcelDeliveryDaoImpl implements ParcelDeliveryDao {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(ParcelDelivery parcelDelivery) {
+        final EntityManager em = emf.createEntityManager();
+        try {
+            if (!em.getTransaction().isActive()) {
+                em.getTransaction().begin();
+            }
+            if(!em.contains(parcelDelivery)) {
+                parcelDelivery = em.merge(parcelDelivery);
+            }
+            em.remove(parcelDelivery);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            LoggerUtil.logError(logger, Level.SEVERE, e);
+            throw e;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
     }
 
     @Override

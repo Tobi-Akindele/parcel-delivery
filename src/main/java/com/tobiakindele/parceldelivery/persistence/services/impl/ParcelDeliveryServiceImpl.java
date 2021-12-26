@@ -18,7 +18,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 import javax.mail.MessagingException;
 import org.dozer.Mapper;
 import org.dozer.MappingException;
@@ -77,6 +79,58 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
             
             return parcelDeliveryDto;
         } catch (MappingException e) {
+            LoggerUtil.logError(logger, Level.SEVERE, e);
+            throw e;
+        }
+    }
+    
+    @Override
+    public ParcelDeliveryDto updateParcelDelivery(ParcelDeliveryDto parcelDeliveryDto) {
+        try{
+            ParcelDeliveryDto dbParcel = parcelDeliveryDao.read(parcelDeliveryDto.getId());
+            if(dbParcel == null){
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Parcel does not exists",
+                        "Parcel ID validation failed");
+                throw new ValidatorException(msg);
+            }
+            if(!ConstantUtils.PARCEL_DELIVERY_STATUS[0].equalsIgnoreCase(dbParcel.getStatus())) {
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Parcel update request failed because it is " + dbParcel.getStatus(),
+                        "Parcel status validation failed");
+                throw new ValidatorException(msg);
+            }
+            dbParcel.setName(parcelDeliveryDto.getName());
+            dbParcel.setDescription(parcelDeliveryDto.getDescription());
+            dbParcel.setPickupAddress(parcelDeliveryDto.getPickupAddress());
+            dbParcel.setDestinationAddress(parcelDeliveryDto.getDestinationAddress());
+            parcelDeliveryDto = parcelDeliveryDao.update(mapper.map(dbParcel, ParcelDelivery.class));
+            
+            return parcelDeliveryDto;
+        } catch(MappingException e) {
+            LoggerUtil.logError(logger, Level.SEVERE, e);
+            throw e;
+        }
+    }
+    
+    @Override
+    public void deleteParcelDelivery(Long parcelDeliveryId) {
+        try{
+            ParcelDeliveryDto dbParcel = parcelDeliveryDao.read(parcelDeliveryId);
+            if(dbParcel == null) {
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Parcel does not exists",
+                        "Parcel ID validation failed");
+                throw new ValidatorException(msg);
+            }
+            if(!ConstantUtils.PARCEL_DELIVERY_STATUS[0].equalsIgnoreCase(dbParcel.getStatus())) {
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Parcel deletion request failed because it is " + dbParcel.getStatus(),
+                        "Parcel deletion validation failed");
+                throw new ValidatorException(msg);
+            }
+            parcelDeliveryDao.delete(mapper.map(dbParcel, ParcelDelivery.class));
+        } catch(ValidatorException | MappingException e){
             LoggerUtil.logError(logger, Level.SEVERE, e);
             throw e;
         }

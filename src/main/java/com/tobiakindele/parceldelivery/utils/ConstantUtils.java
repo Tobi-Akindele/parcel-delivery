@@ -20,5 +20,5 @@ public class ConstantUtils {
     public static final String EMAIL_FORM_UI_ID = "userSignUpForm:email";
     public static final String SIGN_UP_SUCCESS = "loginForm:successSignUpMessage";
     public static final String SYS_ADMIN_EMAIL = "system_support@delisparceldelivery.co.uk";
-    public static final String[] PARCEL_DELIVERY_STATUS = { "Pending", "Completed", "All" };
+    public static final String[] PARCEL_DELIVERY_STATUS = { "Pending", "Completed", "All", "In Transit" };
 }

@@ -38,12 +38,21 @@ public class ParcelRequest {
 
     public String saveParcelDeliveryRequest() {
         parcelDeliveryService.createParcelDelivery(parcelDto);
-        MessageUtils.addSuccessMessageWithFlash("Parcel delivery has been added successful.");
+        MessageUtils.addSuccessMessageWithFlash("Parcel delivery has been added successfully.");
         return "user_home?faces-redirect=true";
     }
-
-    public String getParcelDeliveryDetails(Long parcelId) {
-        parcelDto = parcelDeliveryService.findById(parcelId);
+    
+    public String updateParcelDeliveryRequest() {
+        parcelDeliveryService.updateParcelDelivery(parcelDto);
+        MessageUtils.addSuccessMessageWithFlash("Parcel delivery has been updated successfully.");
+        return "user_home?faces-redirect=true";
+    }
+    
+    public String deleteParcelDeliveryRequest() {
+        if (parcelDto.getId() != null) {
+            parcelDeliveryService.deleteParcelDelivery(parcelDto.getId());
+            MessageUtils.addSuccessMessageWithFlash("Parcel delivery has been deleted successfully.");
+        }
         return "user_home?faces-redirect=true";
     }
 

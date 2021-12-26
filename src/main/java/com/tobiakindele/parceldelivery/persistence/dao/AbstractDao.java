@@ -17,5 +17,5 @@ public interface AbstractDao<T extends AbstractModel, U> {
     
     public U update(T t);
     
-    public void delete(Long id);
+    public void delete(T t);
 }
