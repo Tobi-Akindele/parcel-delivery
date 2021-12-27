@@ -55,7 +55,7 @@ public class ParcelRequest {
         }
         return "user_home?faces-redirect=true";
     }
-
+    
     public void setSelected(Long selectedParcelId) {
         parcelDto = parcelDeliveryService.findById(selectedParcelId);
     }

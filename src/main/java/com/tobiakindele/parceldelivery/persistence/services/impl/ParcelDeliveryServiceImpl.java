@@ -45,14 +45,6 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
         }
         List<ParcelDeliveryDto> parcelList = parcelDeliveryDao
                 .getAllParcelDeliveryByStatus(status, SessionUtils.getUserId(), range);
-        if(parcelList != null && !parcelList.isEmpty()){
-            parcelList.forEach(p -> {
-                if(p.getCreatedBy() != null)
-                    p.setCreatedByDto(userService.findById(p.getCreatedBy()));
-                if(p.getPickedupBy() != null)
-                    p.setPickedByDto(userService.findById(p.getPickedupBy()));
-            });
-        }
         return parcelList;
     }
 
@@ -147,6 +139,71 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
         }
         return parcelDeliveryDto;
     }
+    
+    @Override
+    public List<ParcelDeliveryDto> getAllParcelDeliveryForDriverByStatus(String status, int[] range) {
+        Long driverId = null;
+        if(ConstantUtils.PARCEL_DELIVERY_STATUS[1].equalsIgnoreCase(status)
+                || ConstantUtils.PARCEL_DELIVERY_STATUS[3].equalsIgnoreCase(status)){
+            driverId = SessionUtils.getUserId();
+        }
+        return parcelDeliveryDao.getAllParcelDeliveryForDriverByStatus(status, driverId, range);
+    }
+
+    @Override
+    public Long getAllParcelDeliveryForDriverByStatusCount(String status) {
+        Long driverId = null;
+        if(ConstantUtils.PARCEL_DELIVERY_STATUS[1].equalsIgnoreCase(status)
+                || ConstantUtils.PARCEL_DELIVERY_STATUS[3].equalsIgnoreCase(status)){
+            driverId = SessionUtils.getUserId();
+        }
+        return parcelDeliveryDao.getAllParcelDeliveryForDriverByStatusCount(status, driverId);
+    }
+
+    @Override
+    public void pickupParcelDeliveryRequest(Long parcelDeliveryId) {
+        ParcelDeliveryDto dbParcel = parcelDeliveryDao.read(parcelDeliveryId);
+        if (dbParcel == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Parcel does not exists",
+                    "Parcel ID validation failed");
+            throw new ValidatorException(msg);
+        }
+        if (!ConstantUtils.PARCEL_DELIVERY_STATUS[0].equalsIgnoreCase(dbParcel.getStatus())) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Parcel delivery request is " + dbParcel.getStatus(),
+                    "Parcel status validation failed");
+            throw new ValidatorException(msg);
+        }
+        dbParcel.setPickedupBy(SessionUtils.getUserId());
+        dbParcel.setStatus(ConstantUtils.PARCEL_DELIVERY_STATUS[3]);
+        dbParcel = parcelDeliveryDao.update(mapper.map(dbParcel, ParcelDelivery.class));
+        
+        dbParcel.setCreatedByDto(userService.findById(dbParcel.getCreatedBy()));
+        sendPickupConfirmation(dbParcel, Utils.getServerURL(FacesContext.getCurrentInstance()));
+    }
+
+    @Override
+    public void deliverParcel(Long parcelDeliveryId) {
+        ParcelDeliveryDto dbParcel = parcelDeliveryDao.read(parcelDeliveryId);
+        if (dbParcel == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Parcel does not exists",
+                    "Parcel ID validation failed");
+            throw new ValidatorException(msg);
+        }
+        if (!ConstantUtils.PARCEL_DELIVERY_STATUS[3].equalsIgnoreCase(dbParcel.getStatus())) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Parcel delivery request is " + dbParcel.getStatus(),
+                    "Parcel status validation failed");
+            throw new ValidatorException(msg);
+        }
+        dbParcel.setStatus(ConstantUtils.PARCEL_DELIVERY_STATUS[1]);
+        dbParcel = parcelDeliveryDao.update(mapper.map(dbParcel, ParcelDelivery.class));
+        
+        dbParcel.setCreatedByDto(userService.findById(dbParcel.getCreatedBy()));
+        sendDeliveredConfirmation(dbParcel, Utils.getServerURL(FacesContext.getCurrentInstance()));
+    }
 
     private void sendCreationConfirmation(ParcelDeliveryDto parcelDeliveryDto, String serverURL) {
         try{
@@ -176,6 +233,68 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
             
             EmailUtil.sendEmail(subject, message, parcelDeliveryDto.getCreatedByDto().getEmail());
         } catch(MessagingException e){
+            LoggerUtil.logError(logger, Level.SEVERE, e);
+        }
+    }
+
+    private void sendPickupConfirmation(ParcelDeliveryDto parcelDeliveryDto, String serverURL) {
+        try{
+            String subject = "Parcel Delivery Update";
+            String message = "Dear [[name]],<br><br>"
+                    + "This is to notify you that the following request has been picked up and will be delivered shortly;<br>"
+                    + "<p> Parcel Name: [[parcelName]] <br>"
+                    + "Parcel Description: [[parcelDescription]] <br>"
+                    + "Pickup Address: [[pickupAddress]] <br>"
+                    + "Destination Address: [[destinationAddress]] <br>"
+                    + "Status: [[status]] </p><br>"
+                    + "Kindly <a href=\"[[URL]]\" target=\"_self\">visit</a> to view the request <br>"
+                    + "or click the link below:<br>"
+                    + "[[URL]] <br><br>"
+                    + "Delis parcel delivery.";
+            
+            String URL = serverURL + "/user_home.xhtml";
+            
+            message = message.replace("[[name]]", parcelDeliveryDto.getCreatedByDto().getFirstName());
+            message = message.replace("[[parcelName]]", parcelDeliveryDto.getName());
+            message = message.replace("[[parcelDescription]]", parcelDeliveryDto.getDescription());
+            message = message.replace("[[pickupAddress]]", parcelDeliveryDto.getPickupAddress());
+            message = message.replace("[[destinationAddress]]", parcelDeliveryDto.getDestinationAddress());
+            message = message.replace("[[status]]", parcelDeliveryDto.getStatus());
+            message = message.replace("[[URL]]", URL);
+            
+            EmailUtil.sendEmail(subject, message, parcelDeliveryDto.getCreatedByDto().getEmail());
+        } catch(MessagingException e) {
+            LoggerUtil.logError(logger, Level.SEVERE, e);
+        }
+    }
+
+    private void sendDeliveredConfirmation(ParcelDeliveryDto parcelDeliveryDto, String serverURL) {
+        try{
+            String subject = "Parcel Delivery Update";
+            String message = "Dear [[name]],<br><br>"
+                    + "This is to notify you that the following request has been delivered;<br>"
+                    + "<p> Parcel Name: [[parcelName]] <br>"
+                    + "Parcel Description: [[parcelDescription]] <br>"
+                    + "Pickup Address: [[pickupAddress]] <br>"
+                    + "Destination Address: [[destinationAddress]] <br>"
+                    + "Status: [[status]] </p><br>"
+                    + "Kindly <a href=\"[[URL]]\" target=\"_self\">visit</a> to view the request <br>"
+                    + "or click the link below:<br>"
+                    + "[[URL]] <br><br>"
+                    + "Delis parcel delivery.";
+            
+            String URL = serverURL + "/user_home.xhtml";
+            
+            message = message.replace("[[name]]", parcelDeliveryDto.getCreatedByDto().getFirstName());
+            message = message.replace("[[parcelName]]", parcelDeliveryDto.getName());
+            message = message.replace("[[parcelDescription]]", parcelDeliveryDto.getDescription());
+            message = message.replace("[[pickupAddress]]", parcelDeliveryDto.getPickupAddress());
+            message = message.replace("[[destinationAddress]]", parcelDeliveryDto.getDestinationAddress());
+            message = message.replace("[[status]]", parcelDeliveryDto.getStatus());
+            message = message.replace("[[URL]]", URL);
+            
+            EmailUtil.sendEmail(subject, message, parcelDeliveryDto.getCreatedByDto().getEmail());
+        } catch(MessagingException e) {
             LoggerUtil.logError(logger, Level.SEVERE, e);
         }
     }

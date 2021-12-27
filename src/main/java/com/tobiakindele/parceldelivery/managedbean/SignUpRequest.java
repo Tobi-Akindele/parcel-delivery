@@ -42,8 +42,15 @@ public class SignUpRequest {
         this.userDto = userDto;
     }
     
-    public String registerUser(){
+    public String registerUser() {
         userDto.setUserType(UserType.USER.name());
+        userService.createUser(userDto);
+        MessageUtils.addSuccessMessageWithFlash("Account creation successful.");
+        return "login?faces-redirect=true";
+    }
+    
+    public String registerDriver() {
+        userDto.setUserType(UserType.DRIVER.name());
         userService.createUser(userDto);
         MessageUtils.addSuccessMessageWithFlash("Account creation successful.");
         return "login?faces-redirect=true";

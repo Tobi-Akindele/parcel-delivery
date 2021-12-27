@@ -17,7 +17,7 @@ $(document).ready(function () {
     });
 });
 
-//Password Validation
+//Password Validation For User Signup
 $(document).ready(function () {
     var passwordInput = document.getElementById('userSignUpForm:password');
     var cPasswordInput = document.getElementById('userSignUpForm:confirmPassword');
@@ -108,7 +108,7 @@ $(document).ready(function () {
             }
         }
     };
-}); 
+});
 
 function dataTableSelectOneRadio(radio) {
     var radioId = radio.name.substring(radio.name.lastIndexOf(':'));

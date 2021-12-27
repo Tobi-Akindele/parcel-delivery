@@ -1,0 +1,230 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="./main_template.xhtml">
+
+    <ui:define name="title">
+        Delis: Driver Home 
+    </ui:define>
+
+    <ui:define name="menu">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <h:link class="navbar-brand fw-bold fs-3" outcome="user_home">Delis Parcel Delivery</h:link>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <h:form>
+                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                        <ul class="navbar-nav container-fluid justify-content-end">
+                            <li class="nav-item">
+                                <h:outputText class="nav-link" value="Welcome, #{ loginRequest.userDto.firstName}" />
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <h:graphicImage library="images" name="person_icon.png" width="50px" height="50px" styleClass="rounded-circle" />
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><h:link class="dropdown-item" outcome="sign_up">Profile</h:link></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><h:commandLink class="dropdown-item" action="#{loginRequest.requestLogout()}">Logout</h:commandLink></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </h:form>
+            </div>
+        </nav>
+    </ui:define>
+
+    <ui:define name="content">
+
+        <div class="container">
+            <h:messages globalOnly="true" errorClass="err" infoClass="info"></h:messages>
+        </div>
+
+        <div class="mb-3 float-end">
+            <!-- Button trigger modal -->
+            <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewRequestModal">
+                View Request
+            </button>
+        </div>
+
+        <h:form id="dataTableForm">
+
+            <div class="container mb-3" style="width: 15%;">
+                <h:selectOneMenu value="#{dps.status}" 
+                                 onchange="submit()" 
+                                 valueChangeListener="#{dps.refreshData}" 
+                                 class="form-control-sm float-end">
+                    <f:selectItem itemValue="Pending" itemLabel="Pending" />
+                    <f:selectItem itemValue="In Transit" itemLabel="In Transit" />
+                    <f:selectItem itemValue="Completed" itemLabel="Completed" />                
+                </h:selectOneMenu>
+            </div>
+
+            <h:dataTable id="dataTable" value="#{dps.dataModel}" var="pd"
+                         styleClass="table" headerClass="headers"
+                         rowClasses="oddRows,evenRows" border="1" cellspacing="0"
+                         cellpadding="5" frame="box">
+
+                <h:column>
+                    <f:facet name="header">Parcel Name</f:facet>
+                        #{pd.name}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Parcel Description</f:facet>
+                        #{pd.description}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Delivery Status</f:facet>
+                        #{pd.status}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Date Added</f:facet>
+                        #{pd.createdAt}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Pick up</f:facet>
+                        #{pd.pickupAddress}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Drop Off</f:facet>
+                        #{pd.destinationAddress}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Select</f:facet>
+
+                    <h:selectOneRadio
+                        onclick="dataTableSelectOneRadio(this);">
+                        <f:selectItem itemValue="#{pd.id}" />
+                        <f:ajax execute="@this" listener="#{driverParcelRequest.setSelected(pd.id)}" 
+                                render="pickupParcelDelivery:pid pickupParcelDelivery:pn 
+                                pickupParcelDelivery:pdesc pickupParcelDelivery:ppa pickupParcelDelivery:pda 
+                                pickupParcelDelivery:pcd pickupParcelDelivery:ps pickupParcelDelivery:pkBtn
+                                pickupParcelDelivery:confirmation pickupParcelDelivery:pstatus" />
+
+                    </h:selectOneRadio>
+                </h:column>
+
+            </h:dataTable>
+
+            <h:panelGroup rendered="#{dps.dataModel.rowCount > 0}">
+                <h:outputText value="#{dps.pagination.pageFirstItem + 1} ... #{dps.pagination.pageLastItem + 1}/#{dps.pagination.count}" /> &nbsp;
+                <h:commandLink action="#{dps.previous}" value="Previous #{dps.pagination.pageSize}" rendered="#{dps.pagination.hasPreviousPage}" /> &nbsp;
+                <h:commandLink action="#{dps.next}" value="Next #{dps.pagination.pageSize}" rendered="#{dps.pagination.hasNextPage}" /> &nbsp;
+            </h:panelGroup>
+
+        </h:form>
+
+        <!-- Pickup Request Confirmation Modal -->
+        <div class="modal fade" id="viewRequestModal" tabindex="-1" aria-labelledby="viewRequestModalLabel" aria-hidden="true">
+            <h:form id="pickupParcelDelivery">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="viewRequestModalLabel">
+                                <h:outputText id="confirmation" 
+                                              value="#{ driverParcelRequest.parcelDto == null 
+                                                        ? '' 
+                                                        : driverParcelRequest.parcelDto.status == 'Pending' 
+                                                                ? 'Pickup Confirmation' 
+                                                                : driverParcelRequest.parcelDto.status == 'In Transit' 
+                                                                        ? 'Delivery Confirmation' 
+                                                                        : 'Completed' }" />
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container">
+                                <div class="row mb-3">
+                                    <h:inputHidden id="pid" value="#{driverParcelRequest.parcelDto.id}" />
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <h:outputText value="Parcel Name:" />
+                                    </div>
+                                    <div class="col">
+                                        <h:outputText id="pn" value="#{driverParcelRequest.parcelDto.name}" />
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <h:outputText value="Parcel Description:" />
+                                    </div>
+                                    <div class="col">
+                                        <h:outputText id="pdesc" value="#{driverParcelRequest.parcelDto.description}" />
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <h:outputText value="Pickup Address:" />
+                                    </div>
+                                    <div class="col">
+                                        <h:outputText id="ppa" value="#{driverParcelRequest.parcelDto.pickupAddress}" />
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <h:outputText value="Destination Address:" />
+                                    </div>
+                                    <div class="col">
+                                        <h:outputText id="pda" value="#{driverParcelRequest.parcelDto.destinationAddress}" />
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <h:outputText value="Date Created:" />
+                                    </div>
+                                    <div class="col">
+                                        <h:outputText id="pcd" value="#{driverParcelRequest.parcelDto.createdAt}" />
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <h:outputText value="Status:" />
+                                    </div>
+                                    <div class="col">
+                                        <h:outputText id="ps" value="#{driverParcelRequest.parcelDto.status}" />
+                                        <h:inputHidden id="pstatus" value="#{driverParcelRequest.parcelDto.status}" />
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <h:commandButton 
+                                id="pkBtn"
+                                value="#{ driverParcelRequest.parcelDto.status == 'Pending' 
+                                          ? 'Pick Up' 
+                                          : driverParcelRequest.parcelDto.status == 'In Transit' ? 'Deliver' : 'Completed' }" 
+                                class="btn btn-primary"
+                                action="#{ driverParcelRequest.pickupOrDeliverParcelDeliveryRequest() }"
+                                disabled="#{ driverParcelRequest.parcelDto == null 
+                                             || driverParcelRequest.parcelDto.status == 'Completed' ? 'true' : 'false' }"/>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

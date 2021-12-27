@@ -31,6 +31,11 @@ public class ParcelDeliveryDaoImpl implements ParcelDeliveryDao {
             + " AND p.createdBy = :userId ORDER BY p.id DESC";
     private static final String FIND_BY_STATUS_COUNT = "SELECT COUNT(p.id) FROM ParcelDelivery p WHERE (p.status = :status OR :status IS NULL)"
             + " AND p.createdBy = :userId ";
+    
+    private static final String FIND_BY_STATUS_FOR_DRIVER = "SELECT p FROM ParcelDelivery p WHERE (p.status = :status OR :status IS NULL)"
+            + " AND (p.pickedupBy = :userId OR :userId IS NULL) ORDER BY p.id DESC";
+    private static final String FIND_BY_STATUS_FOR_DRIVER_COUNT = "SELECT COUNT(p.id) FROM ParcelDelivery p WHERE (p.status = :status OR :status IS NULL)"
+            + " AND (p.pickedupBy = :userId OR :userId IS NULL)";
 
     @Override
     public ParcelDeliveryDto save(ParcelDelivery parcelDelivery) {
@@ -159,5 +164,52 @@ public class ParcelDeliveryDaoImpl implements ParcelDeliveryDao {
             }
         }
     }
-    
+
+    @Override
+    public List<ParcelDeliveryDto> getAllParcelDeliveryForDriverByStatus(String status, Long userId, int[] range) {
+        final EntityManager em = emf.createEntityManager();
+        try{
+            List<ParcelDelivery> parcelList = em.createQuery(FIND_BY_STATUS_FOR_DRIVER, ParcelDelivery.class)
+                    .setParameter("status", status)
+                    .setParameter("userId", userId)
+                    .setMaxResults(range[1] - range[0])
+                    .setFirstResult(range[0])
+                    .getResultList();
+            
+            List<ParcelDeliveryDto> result = new ArrayList<>();
+            if(parcelList != null && !parcelList.isEmpty()){
+                parcelList.forEach(parcel -> {
+                    result.add(mapper.map(parcel, ParcelDeliveryDto.class));
+                });
+            }
+            return result;
+        } catch(MappingException e) {
+            LoggerUtil.logError(logger, Level.SEVERE, e);
+            throw e;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+    @Override
+    public Long getAllParcelDeliveryForDriverByStatusCount(String status, Long userId) {
+        final EntityManager em = emf.createEntityManager();
+        try {
+            Long noOfResults = (Long) em.createQuery(FIND_BY_STATUS_FOR_DRIVER_COUNT)
+                    .setParameter("status", status)
+                    .setParameter("userId", userId)
+                    .getSingleResult();
+            
+            return noOfResults;
+        } catch (MappingException e) {
+            LoggerUtil.logError(logger, Level.SEVERE, e);
+            throw e;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
 }

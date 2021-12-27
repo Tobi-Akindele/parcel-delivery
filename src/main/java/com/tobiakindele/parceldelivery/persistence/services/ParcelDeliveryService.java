@@ -20,4 +20,12 @@ public interface ParcelDeliveryService {
     public Long getAllParcelDeliveryByStatusCount(String status);
     
     public ParcelDeliveryDto findById(Long id);
+    
+    public List<ParcelDeliveryDto> getAllParcelDeliveryForDriverByStatus(String status, int[] range);
+    
+    public Long getAllParcelDeliveryForDriverByStatusCount(String status);
+    
+    public void pickupParcelDeliveryRequest(Long parcelDeliveryId);
+    
+    public void deliverParcel(Long parcelDeliveryId);
 }

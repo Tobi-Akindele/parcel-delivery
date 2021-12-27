@@ -14,4 +14,9 @@ public interface ParcelDeliveryDao extends AbstractDao<ParcelDelivery, ParcelDel
         getAllParcelDeliveryByStatus(String status, Long userId, int[] range);
         
     public Long getAllParcelDeliveryByStatusCount(String status, Long userId);
+    
+    public List<ParcelDeliveryDto> 
+        getAllParcelDeliveryForDriverByStatus(String status, Long userId, int[] range);
+        
+    public Long getAllParcelDeliveryForDriverByStatusCount(String status, Long userId);
 }
