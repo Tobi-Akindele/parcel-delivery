@@ -3,48 +3,52 @@ package com.tobiakindele.parceldelivery.managedbean;
 import com.tobiakindele.parceldelivery.dto.ParcelDeliveryDto;
 import com.tobiakindele.parceldelivery.persistence.services.ParcelDeliveryService;
 import com.tobiakindele.parceldelivery.persistence.services.impl.ParcelDeliveryServiceImpl;
+import com.tobiakindele.parceldelivery.utils.ConstantUtils;
 import com.tobiakindele.parceldelivery.utils.PaginationHelper;
-import java.io.Serializable;
+import com.tobiakindele.parceldelivery.utils.Utils;
 import javax.inject.Named;
+import javax.faces.view.ViewScoped;
+import java.io.Serializable;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
-import javax.faces.view.ViewScoped;
 
 /**
  *
  * @author oyindamolaakindele
  */
-@Named(value = "ups")
+@Named(value = "dps")
 @ViewScoped
-public class UserParcels implements Serializable {
+public class DriverParcels implements Serializable {
     
     private static final long serialVersionUID = 1L;
-
+    
     private final ParcelDeliveryService parcelDeliveryService = new ParcelDeliveryServiceImpl();
     private DataModel<ParcelDeliveryDto> dataModel;
     private PaginationHelper pagination;
     private String status;
     
     public DataModel<ParcelDeliveryDto> getDataModel() {
+        status = Utils.isEmpty(status) ? ConstantUtils.PARCEL_DELIVERY_STATUS[0] : status;
         dataModel = getPagination().createPageDataModel();
+
         return dataModel;
     }
     
-    public PaginationHelper getPagination(){
-        if(pagination == null) {
+    public PaginationHelper getPagination() {
+        if (pagination == null) {
             pagination = new PaginationHelper(10) {
                 @Override
                 public int getCount() {
-                    return parcelDeliveryService.getAllParcelDeliveryByStatusCount(status).intValue();
+                    return parcelDeliveryService.getAllParcelDeliveryForDriverByStatusCount(status).intValue();
                 }
 
                 @Override
                 public DataModel createPageDataModel() {
                     return new ListDataModel(parcelDeliveryService
-                            .getAllParcelDeliveryByStatus(status, new int[]{getPageFirstItem(), getPageFirstItem() + getPageSize()}));
+                            .getAllParcelDeliveryForDriverByStatus(status, new int[]{getPageFirstItem(), getPageFirstItem() + getPageSize()}));
                 }
-                
+
             };
         }
         return pagination;
