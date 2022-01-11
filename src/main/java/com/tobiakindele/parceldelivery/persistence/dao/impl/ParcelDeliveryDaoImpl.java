@@ -25,7 +25,7 @@ public class ParcelDeliveryDaoImpl implements ParcelDeliveryDao {
     
     private static final EntityManagerFactory emf = JPAResourceBean.getEMF();
     
-    private static final Mapper mapper = ObjectMapper.getMapper();
+    private static final Mapper mapper = ObjectMapper.getInstance();
     
     private static final String FIND_BY_STATUS = "SELECT p FROM ParcelDelivery p WHERE (p.status = :status OR :status IS NULL)"
             + " AND p.createdBy = :userId ORDER BY p.id DESC";

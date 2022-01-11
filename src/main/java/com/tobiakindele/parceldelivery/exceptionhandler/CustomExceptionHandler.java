@@ -5,10 +5,8 @@ import com.tobiakindele.parceldelivery.utils.MessageUtils;
 import com.tobiakindele.parceldelivery.utils.Utils;
 import java.util.Iterator;
 import javax.faces.FacesException;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.ExceptionHandlerWrapper;
 import javax.faces.context.ExceptionHandler;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ExceptionQueuedEvent;
 import javax.faces.event.ExceptionQueuedEventContext;
 

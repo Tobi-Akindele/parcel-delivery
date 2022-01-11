@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 /**
  *
@@ -24,8 +23,6 @@ import javax.persistence.Transient;
 @Entity(name = "Users")
 @Cacheable
 public class User extends AbstractModel {
-    
-    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,9 +60,6 @@ public class User extends AbstractModel {
     
     @Column(name = "verification_code")
     private String verificationCode;
-
-    @Transient
-    private String confirmPassword;
 
     public User() {
     }
@@ -128,14 +122,6 @@ public class User extends AbstractModel {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
     }
 
     public Boolean getEmailVerified() {

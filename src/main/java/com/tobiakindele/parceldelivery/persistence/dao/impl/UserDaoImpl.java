@@ -26,7 +26,7 @@ public class UserDaoImpl implements UserDao {
     
     private static final EntityManagerFactory emf = JPAResourceBean.getEMF();
     
-    private static final Mapper mapper = ObjectMapper.getMapper();
+    private static final Mapper mapper = ObjectMapper.getInstance();
     
     private static final String FIND_BY_EMAIL = "SELECT u FROM Users u WHERE u.email = :email";
     

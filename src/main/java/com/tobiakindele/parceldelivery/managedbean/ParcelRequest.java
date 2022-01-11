@@ -17,15 +17,12 @@ import javax.enterprise.context.RequestScoped;
 public class ParcelRequest {
 
     private ParcelDeliveryDto parcelDto;
-    private final ParcelDeliveryService parcelDeliveryService;
+    
+    private final ParcelDeliveryService parcelDeliveryService = new ParcelDeliveryServiceImpl();
 
     @PostConstruct
     public void init() {
         parcelDto = new ParcelDeliveryDto();
-    }
-
-    public ParcelRequest() {
-        parcelDeliveryService = new ParcelDeliveryServiceImpl();
     }
 
     public ParcelDeliveryDto getParcelDto() {

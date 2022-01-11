@@ -20,18 +20,11 @@ public class SignUpRequest {
 
     private UserDto userDto;
 
-    private final UserService userService;
+    private final UserService userService = new UserServiceImpl();
     
     @PostConstruct
     public void init() {
         userDto = new UserDto(new AddressDto());
-    }
-
-    /**
-     * Creates a new instance of SignUpRequest
-     */
-    public SignUpRequest() {
-        this.userService = new UserServiceImpl();
     }
 
     public UserDto getUserDto() {

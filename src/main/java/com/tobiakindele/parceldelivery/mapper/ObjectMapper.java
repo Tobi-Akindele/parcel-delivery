@@ -10,12 +10,18 @@ import org.dozer.Mapper;
 
 public class ObjectMapper {
     
-    private static Mapper mapper;
+    private static Mapper instance;
     
-    public static Mapper getMapper() {
-        if(mapper == null){
-            mapper = new DozerBeanMapper();
+    private ObjectMapper(){}
+    
+    public static Mapper getInstance() {
+        if(instance == null){
+            synchronized(ObjectMapper.class){
+                if(instance == null){
+                    instance = new DozerBeanMapper();
+                }
+            }
         }
-        return mapper;
+        return instance;
     }
 }

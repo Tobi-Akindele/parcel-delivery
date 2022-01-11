@@ -34,9 +34,11 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
     
     private static final Logger logger = Logger.getLogger(ParcelDeliveryServiceImpl.class.getName());
     
-    private final ParcelDeliveryDao parcelDeliveryDao = new ParcelDeliveryDaoImpl();
-    private final UserService userService = new UserServiceImpl();
-    private static final Mapper mapper = ObjectMapper.getMapper();
+    private UserService userService = new UserServiceImpl();
+    
+    private ParcelDeliveryDao parcelDeliveryDao = new ParcelDeliveryDaoImpl();
+    
+    private static final Mapper mapper = ObjectMapper.getInstance();
     
     @Override
     public List<ParcelDeliveryDto> getAllParcelDeliveryByStatus(String status, int[] range){
@@ -82,7 +84,7 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
             ParcelDeliveryDto dbParcel = parcelDeliveryDao.read(parcelDeliveryDto.getId());
             if(dbParcel == null){
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Parcel does not exists",
+                        "Parcel does not exist",
                         "Parcel ID validation failed");
                 throw new ValidatorException(msg);
             }
@@ -99,7 +101,7 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
             parcelDeliveryDto = parcelDeliveryDao.update(mapper.map(dbParcel, ParcelDelivery.class));
             
             return parcelDeliveryDto;
-        } catch(MappingException e) {
+        } catch(ValidatorException | MappingException e) {
             LoggerUtil.logError(logger, Level.SEVERE, e);
             throw e;
         }
@@ -297,5 +299,21 @@ public class ParcelDeliveryServiceImpl implements ParcelDeliveryService {
         } catch(MessagingException e) {
             LoggerUtil.logError(logger, Level.SEVERE, e);
         }
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public ParcelDeliveryDao getParcelDeliveryDao() {
+        return parcelDeliveryDao;
+    }
+
+    public void setParcelDeliveryDao(ParcelDeliveryDao parcelDeliveryDao) {
+        this.parcelDeliveryDao = parcelDeliveryDao;
     }
 }
