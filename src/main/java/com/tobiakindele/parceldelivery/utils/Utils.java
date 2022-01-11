@@ -69,7 +69,7 @@ public class Utils {
         return RandomStringUtils.randomAlphanumeric(64) + System.currentTimeMillis();
     }
     
-    public static String getServerURL(FacesContext context){
-        return context.getExternalContext().getInitParameter("Site.URL");
+    public static String getServerURL(FacesContext context) {
+        return context != null ? context.getExternalContext().getInitParameter("Site.URL") : null;
     }
 }

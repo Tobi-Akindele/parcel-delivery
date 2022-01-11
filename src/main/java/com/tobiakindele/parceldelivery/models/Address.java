@@ -15,8 +15,6 @@ import javax.persistence.Id;
 @Entity(name = "Address")
 public class Address extends AbstractModel {
     
-    private static final long serialVersionUID = 1L;
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

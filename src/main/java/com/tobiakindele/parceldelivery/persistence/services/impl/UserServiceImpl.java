@@ -32,8 +32,13 @@ public class UserServiceImpl implements UserService {
     
     private static final Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
 
-    private final UserDao userDao = new UserDaoImpl();
-    private static final Mapper mapper = ObjectMapper.getMapper();
+    private UserDao userDao = new UserDaoImpl();
+    private static final Mapper mapper = ObjectMapper.getInstance();
+    
+    @Override
+    public UserDto findById(Long id) {
+        return userDao.read(id);
+    }
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -54,7 +59,6 @@ public class UserServiceImpl implements UserService {
             userDto.setDateJoined(new Date());
             userDto.setPassword(Utils.encryptPassword(userDto.getPassword()));
             userDto.setEmailVerified(Boolean.FALSE);
-            userDto.setConfirmPassword(null);
             userDto.setVerificationCode(Utils.generateVerificationCode());
 
             userDto = userDao.save(mapper.map(userDto, User.class));
@@ -94,9 +98,11 @@ public class UserServiceImpl implements UserService {
                     "Password validation failed.");
             throw new ValidatorException(msg);
         }
-        HttpSession session = SessionUtils.getSession();
-        session.setAttribute("email", userDto.getEmail());
-        session.setAttribute("userId", userDto.getId());
+        if (SessionUtils.getSession() != null) {
+            HttpSession session = SessionUtils.getSession();
+            session.setAttribute("email", userDto.getEmail());
+            session.setAttribute("userId", userDto.getId());
+        }
         
         return userDto;
     }
@@ -104,7 +110,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void logout() {
         HttpSession session = SessionUtils.getSession();
-        session.invalidate();
+        if(session != null)
+            session.invalidate();
     }
     
     @Override
@@ -139,8 +146,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    public UserDto findById(Long id) {
-        return userDao.read(id);
+    public UserDao getUserDao() {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
     }
 }

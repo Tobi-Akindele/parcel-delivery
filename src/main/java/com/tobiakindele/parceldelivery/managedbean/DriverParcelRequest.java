@@ -18,15 +18,12 @@ import javax.enterprise.context.RequestScoped;
 public class DriverParcelRequest {
 
     private ParcelDeliveryDto parcelDto;
-    private final ParcelDeliveryService parcelDeliveryService;
+
+    private final ParcelDeliveryService parcelDeliveryService = new ParcelDeliveryServiceImpl();
     
     @PostConstruct
     public void init() {
         parcelDto = new ParcelDeliveryDto();
-    }
-    
-    public DriverParcelRequest() {
-        parcelDeliveryService = new ParcelDeliveryServiceImpl();
     }
 
     public ParcelDeliveryDto getParcelDto() {

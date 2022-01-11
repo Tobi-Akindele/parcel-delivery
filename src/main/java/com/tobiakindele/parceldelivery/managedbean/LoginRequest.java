@@ -21,14 +21,8 @@ public class LoginRequest implements Serializable {
     private String email;
     private String password;
     private UserDto userDto;
-    
+
     private final UserService userService = new UserServiceImpl();
-    
-    /**
-     * Creates a new instance of LoginRequest
-     */
-    public LoginRequest() {
-    }
 
     public String getEmail() {
         return email;

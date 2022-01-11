@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 public class Activation {
 
     private boolean valid;
+
     private final UserService userService = new UserServiceImpl();
 
     @PostConstruct

@@ -12,8 +12,9 @@ import javax.servlet.http.HttpSession;
 public class SessionUtils {
     
     public static HttpSession getSession(){
-        return (HttpSession) FacesContext.getCurrentInstance()
-                .getExternalContext().getSession(false);
+        FacesContext fc = FacesContext.getCurrentInstance();
+        return fc != null ? (HttpSession) FacesContext.getCurrentInstance()
+                .getExternalContext().getSession(false) : null;
     }
 
     public static HttpServletRequest getRequest() {
@@ -22,9 +23,12 @@ public class SessionUtils {
     }
 
     public static String getEmail() {
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
-                .getExternalContext().getSession(false);
-        return String.valueOf(session.getAttribute("email"));
+        HttpSession session = getSession();
+        if (session != null) {
+            return String.valueOf(session.getAttribute("email"));
+        } else {
+            return null;
+        }
     }
 
     public static Long getUserId() {
